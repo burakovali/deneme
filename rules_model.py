@@ -21,7 +21,7 @@ def mark_model_iphone(didbName='didb', write_to_file=True):
 def mark_model_macBook(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
 
-    macBook_rule = (df['brand'] == 'Apple') & ((df['hostname'].str.contains('macBook', na=False, case=False)) | (df['user_agent'].str.contains('macbook', na=False, case=False)))
+    macBook_rule = ((df['brand'] == 'Apple') & ((df['hostname'].str.contains('macBook', na=False, case=False)) | (df['user_agent'].str.contains('macbook', na=False, case=False)) | (df['hostname'].str.contains('MBP', na=False, case=True))))
     
     df.loc[macBook_rule, 'model'] = 'macBook'
     if write_to_file:

@@ -19,7 +19,7 @@ didbName = 'didb'
 # df = rules.mark_ios_version(didbName, True)
 # print(df[df['gw_mac'] == 'ec:c0:1b:65:f3:cc'])
 
-generate.create_didb()
+# generate.create_didb()
 
 df = generate.populate_didb(didbName, 'ALL')
 
