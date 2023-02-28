@@ -3,11 +3,13 @@ import json
 import pandas as pd
 import pickle
 import os
-import helper
+import helper, fetcher
 import generate
 import rules
 
 didbName = 'didb'
+
+# fetcher.get_data(type='ALL')
 
 # df = rules.mark_brand_apple(didbName, True)
 # df = rules.mark_brand_samsung(didbName, True)

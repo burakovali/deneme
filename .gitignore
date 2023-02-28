@@ -6,7 +6,12 @@
 *.so.dbg
 *.d
 *.cmd
-configuration.py
+*.json
+*.csv
+# Ignore pickles
+*.pkl
+**/*.pkl
+didb*
 #
 # Top-level generic files
 #
