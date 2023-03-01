@@ -9,7 +9,7 @@ import rules
 
 didbName = 'didb'
 
-fetcher.get_data(type='ALL')
+# fetcher.get_data(type='ALL')
 
 
 generate.create_didb()

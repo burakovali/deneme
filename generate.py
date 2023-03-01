@@ -8,10 +8,12 @@ import helper
 
 def populate_didb(didbName, rule='BRAND'):
 
-    # df = rules.mark_brand_apple(didbName, 'Apple', True)
+    helper.delete_didb(didbName) # Clear the previously stored processed_didb
+    print("Running rules...")
     if rule == 'ALL':
         for rule in rules.all_rules:
             for ri,rv in enumerate(rule):
+                print(rv)
                 rv()
     elif rule == 'BRAND':
         for ri,rv in enumerate(rules.brand_rules):
@@ -46,6 +48,8 @@ def create_didb(didbName='didb', write_to_file=True):
     data_dhcp_proc = json.load(f_dhcp_proc)
     f_assoc_req = open('assoc_req.json')
     data_assoc_req = json.load(f_assoc_req)
+
+    print("Creating didb...")
 
     df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'assoc_req', 'params', 'vendor'])
 

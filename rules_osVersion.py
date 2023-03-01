@@ -55,4 +55,17 @@ def mark_android_version(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
+def mark_windows_version(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+
+    for i,v in df[df['OS'] == 'Windows'].iterrows():
+        if 'Microsoft-CryptoAPI' in v["user_agent"]:
+            v["user_agent"].split('/')[1]
+            df.loc[i, 'version'] = v["user_agent"].split('/')[1]
+        elif 'Microsoft-WNS' in v["user_agent"]:
+            v["user_agent"].split('/')[1]
+            df.loc[i, 'version'] = v["user_agent"].split('/')[1]
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
     

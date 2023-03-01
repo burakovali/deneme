@@ -32,4 +32,11 @@ def mark_os_android(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
+def mark_os_windows(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    windows_rule = (df['user_agent'].str.contains('microsoft-wns', na=False, case=False)) | (df['user_agent'].str.contains('Microsoft-CryptoAPI', na=False, case=False))
+    df.loc[windows_rule, 'OS'] = 'Windows'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
     

@@ -36,6 +36,12 @@ def update_didb(df, didbName):
     write_pickle(df, didb_processed)
     return df
 
+def delete_didb(didbName):
+    didb_processed = str(didbName) + '_processed'
+    if os.path.exists(didb_processed):
+        print("Deleting previous processed didb...")
+        os.remove(didb_processed)
+
 def write_df_to_csv(df, filename):
     out = df.to_csv(filename, index=False)
     return out
