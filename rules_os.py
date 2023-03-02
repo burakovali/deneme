@@ -5,7 +5,6 @@ import pickle
 import os
 import helper
 
-
 def mark_os_iphone(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     ios_rule = (df['brand'] == 'Apple') & ((df['model'].str.contains('iphone', na=False, case=False)))
@@ -39,4 +38,11 @@ def mark_os_windows(didbName='didb', write_to_file=True):
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
-    
+
+def mark_os_linux(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    linux_rule = (df['user_agent'].str.contains('linux', na=False, case=False)) & (~df['user_agent'].str.contains('android', na=False, case=False))
+    df.loc[linux_rule, 'OS'] = 'Linux'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df

@@ -17,6 +17,7 @@ def get_data(type='ALL'):
         dhcp_proc = 'http://cloud-dpi.herokuapp.com/api/dhcp_processed_api/'
         dhcp = 'http://cloud-dpi.herokuapp.com/api/dhcp_api/'
         user_agent = 'http://cloud-dpi.herokuapp.com/api/identified_devices/'
+        raw_user_agent = 'https://cloud-dpi.herokuapp.com/api/raw_user_agent/'
         assoc_req = 'http://cloud-dpi.herokuapp.com/api/assoc_req/'
         # payload = { 'key' : 'val' }
         myheaders = {'Authorization': 'Token 71770dd90492c70863464e214113679b3d8bb5ae'}
@@ -24,6 +25,7 @@ def get_data(type='ALL'):
         res_dhcp_proc = requests.get(url=dhcp_proc, headers=myheaders)
         res_dhcp = requests.get(url=dhcp, headers=myheaders)
         res_user_agent = requests.get(url=user_agent, headers=myheaders)
+        res_raw_user_agent = requests.get(url=raw_user_agent, headers=myheaders)
         res_assoc_req = requests.get(url=assoc_req, headers=myheaders)
 
         with open("dhcp.json", "w") as f:
@@ -32,5 +34,7 @@ def get_data(type='ALL'):
             json.dump(res_dhcp_proc.json(), f)
         with open("user_agent.json", "w") as f:
             json.dump(res_user_agent.json(), f)
+        with open("raw_user_agent.json", "w") as f:
+            json.dump(res_raw_user_agent.json(), f)
         with open("assoc_req.json", "w") as f:
             json.dump(res_assoc_req.json(), f)

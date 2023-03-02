@@ -3,6 +3,45 @@ import json
 import pandas as pd
 import pickle
 import os
+import httpagentparser
+
+def hex_to_string(hex):
+    if hex[:2] == '0x':
+        hex = hex[2:]
+    string_value = bytes.fromhex(hex).decode('utf-8')
+    return string_value
+
+def parse_useragent(str):
+    data = httpagentparser.detect(str)
+    platformName = None
+    platformVersion = None
+    os = None
+    distName = None
+    distVersion = None
+    browserName = None
+    browserVersion = None
+    bot = None
+    if "platform" in data:
+        platformName = data['platform']['name']
+        if "version" in data['platform']:
+            platformVersion = data['platform']['version']
+    if "os" in data:
+        os = data['os']['name']
+    if "dist" in data:
+        distName = data['dist']['name']
+        if "version" in data['dist']:
+            distVersion = data['dist']['version']
+    if "browser" in data:
+        browserName = data['browser']['name']
+        if "version" in data['browser']:
+            browserVersion = data['browser']['version']
+    if "bot" in data:
+        bot = data['bot']
+    
+    parsed = {"platformName": platformName, "platformVersion": platformVersion, "os": os, "distName": distName, "distVersion": distVersion, "browserName": browserName, "browserVersion": browserVersion}
+    return parsed
+    
+    
 
 def write_pickle(data, fileName):
     # print("Writing to pickle!!")

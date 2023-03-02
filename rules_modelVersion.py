@@ -27,6 +27,9 @@ def mark_modelVersion_galaxy(didbName='didb', write_to_file=True):
     for ix, vx in enumerate(idx_list):
         df.loc[vx, 'model_version'] = version_list[ix]
 
+    galaxy_rule_A11 = (df['brand'] == 'Samsung') & (df['user_agent'].str.contains('SM-A115F', na=False, case=True))
+    df.loc[galaxy_rule_A11, 'model_version'] = 'A11'
+
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
@@ -52,6 +55,9 @@ def mark_modelVersion_galaxyTab(didbName='didb', write_to_file=True):
     for ix, vx in enumerate(idx_list):
         df.loc[vx, 'model_version'] = version_list[ix]
     
+    galaxyTab_rule_S6 = (df['brand'] == 'Samsung') & (df['user_agent'].str.contains('SM-P610', na=False, case=True))
+    df.loc[galaxyTab_rule_S6, 'model_version'] = 'S6'
+
     if write_to_file:
         helper.update_didb(df, didbName)
     return df

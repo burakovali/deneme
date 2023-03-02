@@ -44,7 +44,8 @@ def mark_model_galaxy(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
 
     galaxy_rule = (df['brand'] == 'Samsung') & ((df['hostname'].str.contains('galaxy', na=False, case=False)) | (df['user_agent'].str.contains('galaxy', na=False, case=False)))
-    
+    galaxy_rule = (df['user_agent'].str.contains('SM-A115F', na=False, case=True)) | galaxy_rule
+
     df.loc[galaxy_rule, 'model'] = 'Galaxy'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -55,8 +56,8 @@ def mark_model_galaxyTab(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
 
     galaxy_rule = (df['brand'] == 'Samsung') & ((df['hostname'].str.contains('galaxy', na=False, case=False)) | (df['user_agent'].str.contains('galaxy', na=False, case=False)))
-
     galaxyTab_rule = (galaxy_rule) & (df['model'] == 'Galaxy') & ((df['hostname'].str.contains('tab', na=False, case=False)) | (df['user_agent'].str.contains('tab', na=False, case=False)))
+    galaxyTab_rule = (df['user_agent'].str.contains('SM-P610', na=False, case=True)) | galaxyTab_rule
     
     df.loc[galaxyTab_rule, 'model'] = 'GalaxyTab'
     if write_to_file:
@@ -79,6 +80,15 @@ def mark_model_thinkpad(didbName='didb', write_to_file=True):
     galaxyTab_rule = (df['brand'] == 'Lenovo') & ((df['vendor'].str.contains('thinkpad', na=False, case=False)) | (df['hostname'].str.contains('thinkpad', na=False, case=False)))
     
     df.loc[galaxyTab_rule, 'model'] = 'ThinkPad'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+def mark_model_nintendo(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    
+    nintendo_rule = df['user_agent'].str.contains('NX NIFM', na=False, case=False)
+    df.loc[nintendo_rule, 'model'] = 'Nintendo 3DS'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
