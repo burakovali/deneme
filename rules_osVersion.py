@@ -41,7 +41,7 @@ def mark_android_version(didbName='didb', write_to_file=True):
             idx = -1
             ua_list = v['user_agent'].split()
             for iua,vua in enumerate(ua_list):
-                if vua == 'Android':
+                if "Android" in vua:
                     idx = iua + 1
                     break        
             if idx != -1:

@@ -8,7 +8,7 @@ import helper
 
 def mark_deviceType_mobile(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
-    mobile_rule = (df['OS'] == 'iOS') | (df['model'] == 'Galaxy')
+    mobile_rule = (df['OS'] == 'iOS') | (df['OS'] == 'Android')|(df['model'] == 'Galaxy')
     df.loc[mobile_rule, 'type'] = 'Mobile'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -16,7 +16,7 @@ def mark_deviceType_mobile(didbName='didb', write_to_file=True):
 
 def mark_deviceType_laptop(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
-    laptop_rule = (df['model'] == 'macBook') | (df['model'] == 'macBookPro')
+    laptop_rule = (df['model'] == 'macBook') | (df['OS'] == 'Windows') |(df['OS'] == 'Linux') |(df['model'] == 'macBookPro') | df['user_agent'].str.contains('origin', na=False, case=False) 
     df.loc[laptop_rule, 'type'] = 'Laptop'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -25,8 +25,10 @@ def mark_deviceType_laptop(didbName='didb', write_to_file=True):
 def mark_deviceType_gamingConsole(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     gamingConsole_rule = (df['model'] == 'Nintendo 3DS') | (df['model'] == 'PS5')
-    df.loc[gamingConsole_rule, 'type'] = 'Laptop'
+    df.loc[gamingConsole_rule, 'type'] = 'Gaming Console'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
-    
+
+
+

@@ -61,7 +61,7 @@ def mark_brand_huawei(didbName='didb', write_to_file=True):
 def mark_brand_xiaomi(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     
-    samsung_rule = df['hostname'].str.contains('xiaomi', na=False, case=False) | df['vendor'].str.contains('xiaomi', na=False, case=False)
+    samsung_rule = df['hostname'].str.contains('xiaomi', na=False, case=False) | df['user_agent'].str.contains('xiaomi', na=False, case=False) |df['vendor'].str.contains('xiaomi', na=False, case=False)   
     
     df.loc[samsung_rule, 'brand'] = 'Xiaomi'
     if write_to_file:
