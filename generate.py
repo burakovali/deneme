@@ -194,51 +194,57 @@ def merge_didb(didbName='didb', write_to_file=True):
             gw_mac = ''
         try:
             brand = list(df[df['mac'] == mac]['brand'].unique())
+        except:
+            brand = None
+        if brand is not None:
             brand = [x for x in brand if str(x) != 'nan']
             if len(brand) == 0:
                 brand = ''
-        except:
-            brand = None
 
         try:
             model = list(df[df['mac'] == mac]['model'].unique())
+        except:
+            model = None
+        if model is not None:
             model = [x for x in model if str(x) != 'nan']
             if len(model) == 0:
                 model = ''
-        except:
-            model = None
 
         try:
             modelVersion = list(df[df['mac'] == mac]['modelVersion'].unique())
+        except:
+            modelVersion = None
+        if modelVersion is not None:
             modelVersion = [x for x in modelVersion if str(x) != 'nan']
             if len(modelVersion) == 0:
                 modelVersion = ''
-        except:
-            modelVersion = None
 
         try:
             os = list(df[df['mac'] == mac]['os'].unique())
+        except:
+            os = None
+        if os is not None:
             os = [x for x in os if str(x) != 'nan']
             if len(os) == 0:
                 os = ''
-        except:
-            os = None
 
         try:
             osVersion = list(df[df['mac'] == mac]['osVersion'].unique())
+        except:
+            osVersion = None
+        if osVersion is not None:
             osVersion = [x for x in osVersion if str(x) != 'nan']
             if len(osVersion) == 0:
                 osVersion = ''
-        except:
-            osVersion = None
 
         try:
             deviceType = list(df[df['mac'] == mac]['deviceType'].unique())
+        except:
+            deviceType = None
+        if deviceType is not None:
             deviceType = [x for x in deviceType if str(x) != 'nan']
             if len(deviceType) == 0:
                 deviceType = ''
-        except:
-            deviceType = None
 
         row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType}
 
