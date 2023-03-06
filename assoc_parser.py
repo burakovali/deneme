@@ -52,10 +52,10 @@ def parse_assoc_df(assoc_df):
     assoc_df["vendors"]=""
     assoc_df['rates']=""
     assoc_df['capabilities']=""
-    assoc_df["information_element_id_list"]=''
-    assoc_df['ht_capabilities']=''
-    assoc_df['supported_channel_len']=''
-    assoc_df["first_supported_channel"]=''
+    assoc_df["information_element_id_list"]=""
+    assoc_df['spatial_stream']=""
+    assoc_df['supported_channel_len']=""
+    assoc_df["first_supported_channel"]=""
     assoc_df["supported_channel_raw"]=""
     assoc_df["extended_capabilities_raw"]=""
     assoc_df=assoc_df.reset_index()
@@ -99,7 +99,17 @@ def parse_assoc_df(assoc_df):
         ### extra
         dot11elt = packet.getlayer(Dot11Elt,ID=45)
         try:
-            assoc_df.at[index,"ht_capabilities"]=dot11elt.info.hex()
+            element_value=str(dot11elt.info.hex())[6:26]
+            element_int_value = int(element_value, base=16)
+            element_binary_value = str(bin(element_int_value))[2:]
+            first_unsported_mcs=element_binary_value.index("0")
+            if first_unsported_mcs == 8:
+                assoc_df.at[index,"spatial_stream"]=1
+            elif first_unsported_mcs == 16:
+                assoc_df.at[index,"spatial_stream"]=2
+            else:
+                assoc_df.at[index,"spatial_stream"]=3
+        
         except:
             pass
         dot11elt = packet.getlayer(Dot11Elt,ID=36)
