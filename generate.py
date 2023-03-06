@@ -176,3 +176,74 @@ def create_didb_redundant(write_to_file=False):
         helper.write_pickle(df_devices, 'didb_redundant')
 
     return df_devices
+
+
+def merge_didb(didbName='didb', write_to_file=True):
+
+    df = helper.get_df(didbName)
+
+    macList = list(df['mac'].unique())
+
+    merged_df = pd.DataFrame(columns=['mac', 'gw_mac', 'brand', 'model', 'modelVersion', 'os', 'osVersion', 'deviceType'])
+
+    for mac in macList:
+        sta_mac = helper.colonizeMAC(mac)
+        gw_mac = list(df[df['mac'] == mac]['gw_mac'].unique())
+        gw_mac = [x for x in gw_mac if str(x) != 'nan']
+        if len(gw_mac) == 0:
+            gw_mac = ''
+        try:
+            brand = list(df[df['mac'] == mac]['brand'].unique())
+            brand = [x for x in brand if str(x) != 'nan']
+            if len(brand) == 0:
+                brand = ''
+        except:
+            brand = None
+
+        try:
+            model = list(df[df['mac'] == mac]['model'].unique())
+            model = [x for x in model if str(x) != 'nan']
+            if len(model) == 0:
+                model = ''
+        except:
+            model = None
+
+        try:
+            modelVersion = list(df[df['mac'] == mac]['modelVersion'].unique())
+            modelVersion = [x for x in modelVersion if str(x) != 'nan']
+            if len(modelVersion) == 0:
+                modelVersion = ''
+        except:
+            modelVersion = None
+
+        try:
+            os = list(df[df['mac'] == mac]['os'].unique())
+            os = [x for x in os if str(x) != 'nan']
+            if len(os) == 0:
+                os = ''
+        except:
+            os = None
+
+        try:
+            osVersion = list(df[df['mac'] == mac]['osVersion'].unique())
+            osVersion = [x for x in osVersion if str(x) != 'nan']
+            if len(osVersion) == 0:
+                osVersion = ''
+        except:
+            osVersion = None
+
+        try:
+            deviceType = list(df[df['mac'] == mac]['deviceType'].unique())
+            deviceType = [x for x in deviceType if str(x) != 'nan']
+            if len(deviceType) == 0:
+                deviceType = ''
+        except:
+            deviceType = None
+
+        row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType}
+
+        merged_df = merged_df.append(row, ignore_index=True)
+
+        if write_to_file:
+            helper.write_pickle(merged_df, 'didb_merged')
+    return merged_df

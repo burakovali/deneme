@@ -47,8 +47,6 @@ def parse_useragent(str):
     
     parsed = {"platformName": platformName, "platformVersion": platformVersion, "os": os, "distName": distName, "distVersion": distVersion, "browserName": browserName, "browserVersion": browserVersion}
     return parsed
-    
-    
 
 def write_pickle(data, fileName):
     # print("Writing to pickle!!")
@@ -109,3 +107,5 @@ def colonizeMAC(mac):
         return themac.lower()
     else:
         return mac
+
+

@@ -4,6 +4,7 @@ import pandas as pd
 import pickle
 import os
 import helper
+import rules
 
 
 def mark_brand_apple(didbName='didb', write_to_file=True):
