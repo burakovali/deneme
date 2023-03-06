@@ -97,13 +97,19 @@ def create_didb(didbName='didb', write_to_file=True):
         hostnames.append(thisHostname)
   
     for item in data_assoc_req:
-        device_mac = helper.unColonizeMAC(item['device_mac'])
+        if helper.check_if_valid_mac(item['device_mac']):
+            device_mac = helper.unColonizeMAC(item['device_mac'])
+        else:
+            device_mac = None
         row = {'mac': device_mac, 'user_agent': None, 'hostname': None, 'assoc_req': item['data'], 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': None, 'vendor': None}
         if not df_devices[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac'])].empty:
+            # if not ('does not exist' in str(item['data'])):
             df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'assoc_req'] = item['data']
         else:
             if not (device_mac == None):
-                df_devices = df_devices.append(row, ignore_index=True)
+                if not ('does not exist' in str(item['data'])):
+                    # print(device_mac + ' does not exist...')
+                    df_devices = df_devices.append(row, ignore_index=True)
         assoc_reqs.append(item['data'])
 
     if write_to_file:

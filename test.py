@@ -10,15 +10,15 @@ import rules
 didbName = 'didb'
 
 # fetcher.get_data(type='ALL')
-# generate.create_didb()
+generate.create_didb()
 
 df = generate.populate_didb(didbName, 'ALL')
-
 df = helper.get_df(didbName)
 helper.write_df_to_csv(df, 'processed_didb.csv')
+
+
+
 # print(df['user_agent'])
-
-
 # for d in df['user_agent']:
 #     parsed = helper.parse_useragent(d)
 #     print(parsed)

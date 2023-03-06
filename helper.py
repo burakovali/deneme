@@ -4,12 +4,19 @@ import pandas as pd
 import pickle
 import os
 import httpagentparser
+import re
 
 def hex_to_string(hex):
     if hex[:2] == '0x':
         hex = hex[2:]
     string_value = bytes.fromhex(hex).decode('utf-8')
     return string_value
+
+def check_if_valid_mac(mac):
+    if mac is not None:
+        if re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", mac.lower()):
+            return True
+    return False
 
 def parse_useragent(str):
     data = httpagentparser.detect(str)
