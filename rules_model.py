@@ -149,7 +149,8 @@ def mark_model_hpPrinter(didbName='didb', write_to_file=True):
         # read from hostname, user agent or vendor
         (df['hostname'].str.contains('laserj', na=False, case=False)) |
         (df['user_agent'].str.contains('laserj', na=False, case=False)) |
-        (df['vendor'].str.contains('laserj', na=False, case=False))
+        (df['vendor'].str.contains('HP laserj', na=False, case=False)) |
+        (df['vendor'].str.contains('HP print', na=False, case=False))
     )
 
     df.loc[hpPrinter_rule, 'model'] = 'Printer'

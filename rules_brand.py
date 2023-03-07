@@ -23,7 +23,7 @@ def mark_brand_apple(didbName='didb', write_to_file=True):
         df['user_agent'].str.contains('CaptiveNetworkSupport', na= False, case=False) |
         df['user_agent'].str.contains('com.apple', na= False, case=False) |
         # infer from OS
-        (df['OS'] == "iOS") | (df['OS'] == "macOS") | (df['OS'] == "iPadOS")
+        (df['os'] == "iOS") | (df['os'] == "macOS") | (df['os'] == "iPadOS")
     )
 
 
@@ -181,7 +181,7 @@ def mark_brand_sony(didbName='didb', write_to_file=True):
         # infer from model
         df['model'].str.contains('PlayStation', na=False, case=False) |
         # infer from OS
-        df['OS'].str.contains('FreeBSD', na=False, case=False)
+        df['os'].str.contains('FreeBSD', na=False, case=False)
     )
     
     df.loc[sony_rule, 'brand'] = 'Lenovo'
