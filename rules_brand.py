@@ -23,7 +23,7 @@ def mark_brand_apple(didbName='didb', write_to_file=True):
         df['user_agent'].str.contains('CaptiveNetworkSupport', na= False, case=False) |
         df['user_agent'].str.contains('com.apple', na= False, case=False) |
         # infer from OS
-        (df['OS'] == "iOS") | (df['OS'] == "macOS") | (df['OS'] == "ipadOS")
+        (df['OS'] == "iOS") | (df['OS'] == "macOS") | (df['OS'] == "iPadOS")
     )
 
 

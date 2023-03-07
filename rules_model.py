@@ -21,7 +21,7 @@ def mark_model_iphone(didbName='didb', write_to_file=True):
         # ((df['brand'] == "Apple") & (df['type'] == 'Mobile'))
     )
 
-    df.loc[iphone_rule, 'model'] = 'iphone'
+    df.loc[iphone_rule, 'model'] = 'iPhone'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
@@ -53,7 +53,7 @@ def mark_model_ipadPro(didbName='didb', write_to_file=True):
         df['vendor'].str.contains('ipad.pro', regex = True, na=False, case=False)
     )
     
-    df.loc[ipadPro_rule, 'model'] = 'ipadPro'
+    df.loc[ipadPro_rule, 'model'] = 'iPadPro'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df

@@ -114,7 +114,7 @@ def mark_os_ipad(didbName='didb', write_to_file=True):
         apple_tablet_rule
     )
     
-    df.loc[ipadOS_rule, 'OS'] = 'ipadOS_rule'
+    df.loc[ipadOS_rule, 'OS'] = 'iPadOS'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
