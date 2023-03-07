@@ -109,7 +109,8 @@ def mark_model_galaxy(didbName='didb', write_to_file=True):
         df['hostname'].str.contains('galaxy', na=False, case=False) |
         df['user_agent'].str.contains('galaxy', na=False, case=False) |
         df['vendor'].str.contains('galaxy', na=False, case=False) |
-        df['user_agent'].str.contains('SM-A115F', na=False, case=False) # TODO add all galaxy model numbers
+        df['user_agent'].str.contains('SM-A115F', na=False, case=False) | 
+        df['user_agent'].str.contains('SM-G965F', na=False, case=False) # TODO add all galaxy model numbers
     )
 
     df.loc[galaxy_rule, 'model'] = 'Galaxy'

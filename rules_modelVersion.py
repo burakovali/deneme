@@ -28,7 +28,10 @@ def mark_modelVersion_galaxy(didbName='didb', write_to_file=True):
         df.loc[vx, 'modelVersion'] = version_list[ix]
 
     galaxy_rule_A11 = (df['brand'] == 'Samsung') & (df['user_agent'].str.contains('SM-A115F', na=False, case=True))
+    galaxy_rule_S9plus = (df['brand'] == 'Samsung') & (df['user_agent'].str.contains('SM-G965F', na=False, case=True))
+
     df.loc[galaxy_rule_A11, 'modelVersion'] = 'A11'
+    df.loc[galaxy_rule_S9plus, 'modelVersion'] = 'S9+'
 
     if write_to_file:
         helper.update_didb(df, didbName)
