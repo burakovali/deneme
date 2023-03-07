@@ -6,6 +6,40 @@ import os
 import rules
 import helper
 
+def populate_didb_withParams(didbName, rule='ALL'):
+    # should be written in a better way
+    # helper.delete_didb(didbName) # Clear the previously stored processed_didb
+    print("Running rules with op55 parameters...")
+    if rule == 'ALL':
+        for rule in rules.all_rules:
+            for ri,rv in enumerate(rule):
+                print(rv)
+                rv()
+    elif rule == 'BRAND':
+        for ri,rv in enumerate(rules.brand_rules):
+            rv()
+    elif rule == 'MODEL':
+        for ri,rv in enumerate(rules.model_rules):
+            rv()
+    elif rule == 'MODELVERSION':
+        for ri,rv in enumerate(rules.modelVersion_rules):
+            rv()
+    elif rule == 'OS':
+        for ri,rv in enumerate(rules.os_rules):
+            rv()
+    elif rule == 'OSVERSION':
+        for ri,rv in enumerate(rules.osVersion_rules):
+            rv()
+    elif rule == 'DEVICETYPE':
+        for ri,rv in enumerate(rules.deviceType_rules):
+            rv()
+    else:
+        print('RULE UNDEFINED!')
+        exit()
+            
+    df = helper.get_df(didbName)
+    return df
+
 def populate_didb(didbName, rule='ALL'):
 
     helper.delete_didb(didbName) # Clear the previously stored processed_didb

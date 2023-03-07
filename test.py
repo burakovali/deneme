@@ -15,8 +15,10 @@ didbName = 'didb'
 df = generate.populate_didb(didbName, 'ALL')
 
 # create os-parameters lists for known devices
-df = generate.os_params_list(didbName, False)
-helper.write_df_to_csv(df, 'os_param_list.csv')
+""" df_param = generate.os_params_list(didbName, False)
+helper.write_df_to_csv(df_param, 'os_param_list.csv') """
+
+# df = generate.populate_didb_withParams(didbName, df_param, 'ALL' )
 
 df = helper.get_df(didbName)
 helper.write_df_to_csv(df, 'processed_didb.csv')

@@ -5,6 +5,11 @@ import pickle
 import os
 import helper
 
+params_iphone = ['1,121,3,6,15,108,114,119,252']
+params_macbook = ['1,121,3,6,15,114,119,252,95,44,46']
+params_macbookPro = ['1,121,3,6,15,108,114,119,252,95,44,46', '1,121,3,6,15,119,252,95,44,46']
+params_printer = ['1,121,33,3,6,12,15,28,44,51,54,58,59,81,119,252', '6,3,1,15,12,44,81,69,42,43,18,66,67,150,7']
+params_ps5 = ['1,3,15,6']
 
 
 def mark_model_iphone(didbName='didb', write_to_file=True):
@@ -22,6 +27,9 @@ def mark_model_iphone(didbName='didb', write_to_file=True):
     )
 
     df.loc[iphone_rule, 'model'] = 'iPhone'
+    #option 55
+    df.loc[df['params'].isin(params_iphone), 'model'] = 'iPhone'
+
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
@@ -72,6 +80,8 @@ def mark_model_macBook(didbName='didb', write_to_file=True):
     )
 
     df.loc[macBook_rule, 'model'] = 'macBook'
+    #option 55
+    df.loc[df['params'].isin(params_macbook), 'model'] = 'macBook'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
@@ -93,6 +103,8 @@ def mark_model_macBookPro(didbName='didb', write_to_file=True):
     )
 
     df.loc[macBookPro_rule, 'model'] = 'macBookPro'
+    #option 55
+    df.loc[df['params'].isin(params_macbookPro), 'model'] = 'macBookPro'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
@@ -154,6 +166,8 @@ def mark_model_hpPrinter(didbName='didb', write_to_file=True):
     )
 
     df.loc[hpPrinter_rule, 'model'] = 'Printer'
+    #option 55
+    df.loc[df['params'].isin(params_printer), 'model'] = 'Printer'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
@@ -262,6 +276,8 @@ def mark_model_playStation(didbName='didb', write_to_file=True):
     )
     
     df.loc[playStation_rule, 'model'] = 'PlayStation'
+    #option 55
+    df.loc[df['params'].isin(params_ps5), 'model'] = 'PlayStation'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df

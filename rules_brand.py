@@ -6,7 +6,6 @@ import os
 import helper
 import rules
 
-
 def mark_brand_apple(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     
@@ -184,7 +183,7 @@ def mark_brand_sony(didbName='didb', write_to_file=True):
         df['os'].str.contains('FreeBSD', na=False, case=False)
     )
     
-    df.loc[sony_rule, 'brand'] = 'Lenovo'
+    df.loc[sony_rule, 'brand'] = 'Sony'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
