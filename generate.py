@@ -6,7 +6,7 @@ import os
 import rules
 import helper
 
-def populate_didb(didbName, rule='BRAND'):
+def populate_didb(didbName, rule='ALL'):
 
     helper.delete_didb(didbName) # Clear the previously stored processed_didb
     print("Running rules...")
@@ -59,7 +59,7 @@ def create_didb(didbName='didb', write_to_file=True):
     hostnames = []
     assoc_reqs = []
     for item in data_ua:
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'assoc_req': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': None, 'vendor': None}
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'assoc_req': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'], 'vendor': None}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty: 
             df_devices = df_devices.append(row, ignore_index=True)
@@ -101,7 +101,7 @@ def create_didb(didbName='didb', write_to_file=True):
             device_mac = helper.unColonizeMAC(item['device_mac'])
         else:
             device_mac = None
-        row = {'mac': device_mac, 'user_agent': None, 'hostname': None, 'assoc_req': item['data'], 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': None, 'vendor': None}
+        row = {'mac': device_mac, 'user_agent': None, 'hostname': None, 'assoc_req': item['data'], 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'], 'vendor': None}
         if not df_devices[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac'])].empty:
             # if not ('does not exist' in str(item['data'])):
             df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'assoc_req'] = item['data']
@@ -127,7 +127,7 @@ def create_didb_redundant(write_to_file=False):
     f_assoc_req = open('assoc_req.json')
     data_assoc_req = json.load(f_assoc_req)
 
-    df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'assoc_req'])
+    df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'assoc_req', 'op55Params'])
 
     macs = []
     user_agents = []
@@ -135,7 +135,7 @@ def create_didb_redundant(write_to_file=False):
     hostnames = []
     assoc_reqs = []
     for item in data_ua:
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'assoc_req': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp']}
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'assoc_req': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters']}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty: 
             df_devices = df_devices.append(row, ignore_index=True)
@@ -184,7 +184,7 @@ def merge_didb(didbName='didb', write_to_file=True):
 
     macList = list(df['mac'].unique())
 
-    merged_df = pd.DataFrame(columns=['mac', 'gw_mac', 'brand', 'model', 'modelVersion', 'os', 'osVersion', 'deviceType'])
+    merged_df = pd.DataFrame(columns=['mac', 'gw_mac', 'brand', 'model', 'modelVersion', 'os', 'osVersion', 'deviceType', 'params'])
 
     for mac in macList:
         sta_mac = helper.colonizeMAC(mac)
@@ -246,10 +246,57 @@ def merge_didb(didbName='didb', write_to_file=True):
             if len(deviceType) == 0:
                 deviceType = ''
 
-        row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType}
+        params = list(df[df['mac'] == mac]['params'].unique())
+    
+        row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType, 'params': params}
 
         merged_df = merged_df.append(row, ignore_index=True)
 
         if write_to_file:
             helper.write_pickle(merged_df, 'didb_merged')
     return merged_df
+
+def remove_nan (myList):
+    if myList is not None:
+        myList = [x for x in myList if str(x) != 'nan']
+        if len(myList) == 0:
+            myList = ''
+    return myList    
+
+def os_params_list(didbName='didb', write_to_file=True):
+
+    df = helper.get_df(didbName)
+
+    paramsList = list(df['params'].unique())
+
+    osParam_df = pd.DataFrame(columns=['params', 'os', 'brands', 'models', 'modelVersions'])
+
+    for myP in paramsList:
+        try:
+            myOS = list(df[df['params'] == myP]['os'].unique())
+        except:
+            myOS = None
+        myOS = remove_nan(myOS)
+        try:
+            brands = list(df[df['params'] == myP]['brand'].unique())
+        except:
+            brands = None
+        brands = remove_nan(brands)
+        try:
+            models = list(df[df['params'] == myP]['model'].unique())
+        except:
+            models = None
+        models = remove_nan(models)
+        try:
+            modelVersions = list(df[df['params'] == myP]['modelVersion'].unique())
+        except:
+            modelVersions = None
+        modelVersions = remove_nan(modelVersions) 
+
+        row = {'params': myP, 'os': myOS, 'brands': brands, 'models': models, 'modelVersions': modelVersions}
+
+        osParam_df = osParam_df.append(row, ignore_index=True)
+
+        if write_to_file:
+            helper.write_pickle(osParam_df, 'os_param_list')
+    return osParam_df
