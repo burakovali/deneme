@@ -35,6 +35,37 @@ def mark_os_mac(didbName='didb', write_to_file=True):
     return df
 
 
+
+def mark_os_windows(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    windows_rule = (df['user_agent'].str.contains('microsoft-wns', na=False, case=False)) | (df['user_agent'].str.contains('microsoft', na=False, case=False)) | (df['user_agent'].str.contains('Microsoft-CryptoAPI', na=False, case=False)) | (df['vendor'].str.contains('MSFT', na=False, case=False))
+    df.loc[windows_rule, 'os'] = 'Windows'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+def mark_os_linux(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    # linux_rule = (df['user_agent'].str.contains('linux', na=False, case=False)) & (~df['user_agent'].str.contains('android', na=False, case=False))
+    linux_rule = (
+        # read from hostname, user agent or vendor but there must not be 'android'
+        df['hostname'].str.contains('linux', na=False, case=False) |
+        df['vendor'].str.contains('linux', na=False, case=False) |
+        df['user_agent'].str.contains('linux', na=False, case=False) |
+        df['user_agent'].str.contains('Debian', na=False, case=False) |
+        df['hostname'].str.contains('X11', na=False, case=False) |
+        df['vendor'].str.contains('X11', na=False, case=False) |
+        df['user_agent'].str.contains('X11', na=False, case=False) |
+        df['hostname'].str.contains('ubuntu', na=False, case=False) |
+        df['vendor'].str.contains('ubuntu', na=False, case=False) |
+        df['user_agent'].str.contains('ubuntu', na=False, case=False)
+    )
+    linux_rule = linux_rule & (~df['user_agent'].str.contains('android', na=False, case=False))
+    df.loc[linux_rule, 'os'] = 'Linux'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
 def mark_os_android(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     #android_rule = (df['user_agent'].str.contains('android', na=False, case=False)) | (df['vendor'].str.contains('android', na=False, case=False))
@@ -53,34 +84,6 @@ def mark_os_android(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
-def mark_os_windows(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
-    windows_rule = (df['user_agent'].str.contains('microsoft-wns', na=False, case=False)) | (df['user_agent'].str.contains('microsoft', na=False, case=False)) | (df['user_agent'].str.contains('Microsoft-CryptoAPI', na=False, case=False)) | (df['vendor'].str.contains('MSFT', na=False, case=False))
-    df.loc[windows_rule, 'os'] = 'Windows'
-    if write_to_file:
-        helper.update_didb(df, didbName)
-    return df
-
-def mark_os_linux(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
-    # linux_rule = (df['user_agent'].str.contains('linux', na=False, case=False)) & (~df['user_agent'].str.contains('android', na=False, case=False))
-    linux_rule = (
-        # read from hostname, user agent or vendor but there must not be 'android'
-        (df['hostname'].str.contains('linux', na=False, case=False) |
-        df['vendor'].str.contains('linux', na=False, case=False) |
-        df['user_agent'].str.contains('linux', na=False, case=False) |
-        df['hostname'].str.contains('X11', na=False, case=False) |
-        df['vendor'].str.contains('X11', na=False, case=False) |
-        df['user_agent'].str.contains('X11', na=False, case=False) |
-        df['hostname'].str.contains('ubuntu', na=False, case=False) |
-        df['vendor'].str.contains('ubuntu', na=False, case=False) |
-        df['user_agent'].str.contains('ubuntu', na=False, case=False))
-        & (~df['user_agent'].str.contains('android', na=False, case=False))
-    )
-    df.loc[linux_rule, 'os'] = 'Linux'
-    if write_to_file:
-        helper.update_didb(df, didbName)
-    return df
 
 def mark_os_nintendo3SDSS(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
@@ -91,7 +94,7 @@ def mark_os_nintendo3SDSS(didbName='didb', write_to_file=True):
         df['model'].str.contains('nintendo 3ds', na=False, case=False)
     )
     
-    df.loc[nintendoOS_rule, 'OS'] = 'Nintendo 3DS System Software'
+    df.loc[nintendoOS_rule, 'os'] = 'Nintendo 3DS System Software'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
@@ -126,6 +129,6 @@ def mark_os_unix(didbName='didb', write_to_file=True):
         df['vendor'].str.contains('udhcp', na=False, case=False)
     )
     
-    df.loc[unix_rule, 'OS'] = 'UNIX'
+    df.loc[unix_rule, 'os'] = 'UNIX'
     if write_to_file:
         helper.update_didb(df, didbName)

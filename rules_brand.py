@@ -15,7 +15,7 @@ def mark_brand_apple(didbName='didb', write_to_file=True):
     apple_rule = (
         # read apple from hostname, user agent, vendor name
         df['hostname'].str.contains('apple', na= False, case=False) |
-        df['user_agent'].str.contains('apple', na= False, case=False) |
+        #df['user_agent'].str.contains('apple', na= False, case=False) |
         df['vendor'].str.contains('apple', na= False, case=False) |
         # infer from model
         (df['model'] == "iPhone") | (df['model'] == "macBook") | (df['model'] == "macBookPro") | (df['model'] == "iPad") | (df['model'] == 'macintosh') |
@@ -41,7 +41,7 @@ def mark_brand_samsung(didbName='didb', write_to_file=True):
     samsung_rule = (
         # read samsung from hostname, user agent or vendor id
         df['hostname'].str.contains('samsung', na= False, case=False) |
-        df['user_agent'].str.contains('samsung', na= False, case=False) |
+        #df['user_agent'].str.contains('samsung', na= False, case=False) |
         df['vendor'].str.contains('samsung', na= False, case=False) |
         # infer from model
         (df['model'] == "Galaxy") | (df['model'] == "GalaxyTab")
@@ -101,7 +101,7 @@ def mark_brand_huawei(didbName='didb', write_to_file=True):
         # read from hostname, vendor or user agent
         df['hostname'].str.contains('huawei', na=False, case=False) |
         df['vendor'].str.contains('huawei', na=False, case=False) |
-        df['user_agent'].str.contains('huawei', na=False, case=False) |
+        #df['user_agent'].str.contains('huawei', na=False, case=False) |
         # infer from model, example: Huawei P Series
         df['model'].str.contains('huawei', na=False, case=False)
     )
@@ -140,7 +140,7 @@ def mark_brand_lenovo(didbName='didb', write_to_file=True):
         # read from hostname, user agent, vendor
         df['hostname'].str.contains('lenovo', na=False, case=False) |
         df['vendor'].str.contains('lenovo', na=False, case=False)|
-        df['user_agent'].str.contains('lenovo', na=False, case=False) |
+        #df['user_agent'].str.contains('lenovo', na=False, case=False) |
         # infer from model
         df['model'].str.contains('ThinkPad', na=False, case=False)
     )
@@ -177,7 +177,7 @@ def mark_brand_sony(didbName='didb', write_to_file=True):
         # read from hostname, user agent, vendor
         df['hostname'].str.contains('sony', na=False, case=False) |
         df['vendor'].str.contains('sony', na=False, case=False) |
-        df['user_agent'].str.contains('sony', na=False, case=False) |
+        #df['user_agent'].str.contains('sony', na=False, case=False) |
         # infer from model
         df['model'].str.contains('PlayStation', na=False, case=False) |
         # infer from OS

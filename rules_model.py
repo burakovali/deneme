@@ -67,6 +67,7 @@ def mark_model_macBook(didbName='didb', write_to_file=True):
         # read from hostname, user agent, vendor
         df['hostname'].str.contains('macbook', na=False, case=False) |
         df['user_agent'].str.contains('macbook', na=False, case=False) |
+        df['user_agent'].str.contains('macintosh', na=False, case=False) |
         df['vendor'].str.contains('macbook', na=False, case=False)
     )
 
@@ -99,9 +100,17 @@ def mark_model_macBookPro(didbName='didb', write_to_file=True):
 
 def mark_model_galaxy(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
+    
+    # galaxy_rule =  (df['brand'] == 'Samsung') & ((df['hostname'].str.contains('galaxy', na=False, case=False)) | (df['user_agent'].str.contains('galaxy', na=False, case=False)))
+    # galaxy_rule = (df['user_agent'].str.contains('SM-A115F', na=False, case=True)) | galaxy_rule
 
-    galaxy_rule = (df['brand'] == 'Samsung') & ((df['hostname'].str.contains('galaxy', na=False, case=False)) | (df['user_agent'].str.contains('galaxy', na=False, case=False)))
-    galaxy_rule = (df['user_agent'].str.contains('SM-A115F', na=False, case=True)) | galaxy_rule
+    galaxy_rule = (
+        # read from hsotname, vendor or user agent
+        df['hostname'].str.contains('galaxy', na=False, case=False) |
+        df['user_agent'].str.contains('galaxy', na=False, case=False) |
+        df['vendor'].str.contains('galaxy', na=False, case=False) |
+        df['user_agent'].str.contains('SM-A115F', na=False, case=False) # TODO add all galaxy model numbers
+    )
 
     df.loc[galaxy_rule, 'model'] = 'Galaxy'
     if write_to_file:
@@ -112,10 +121,17 @@ def mark_model_galaxy(didbName='didb', write_to_file=True):
 def mark_model_galaxyTab(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
 
-    galaxy_rule = (df['brand'] == 'Samsung') & ((df['hostname'].str.contains('galaxy', na=False, case=False)) | (df['user_agent'].str.contains('galaxy', na=False, case=False)))
-    galaxyTab_rule = (galaxy_rule) & (df['model'] == 'Galaxy') & ((df['hostname'].str.contains('tab', na=False, case=False)) | (df['user_agent'].str.contains('tab', na=False, case=False)))
-    galaxyTab_rule = (df['user_agent'].str.contains('SM-P610', na=False, case=True)) | galaxyTab_rule
+    # galaxy_rule = (df['brand'] == 'Samsung') & ((df['hostname'].str.contains('galaxy', na=False, case=False)) | (df['user_agent'].str.contains('galaxy', na=False, case=False)))
+    # galaxyTab_rule = (galaxy_rule) & (df['model'] == 'Galaxy') & ((df['hostname'].str.contains('tab', na=False, case=False)) | (df['user_agent'].str.contains('tab', na=False, case=False)))
+    # galaxyTab_rule = (df['user_agent'].str.contains('SM-P610', na=False, case=True)) | galaxyTab_rule
     
+    galaxyTab_rule = (
+        df['hostname'].str.contains('galaxy.tab', na=False, case=False) |
+        df['user_agent'].str.contains('galaxy.tab', na=False, case=False) |
+        df['vendor'].str.contains('galaxy.tab', na=False, case=False) |
+        df['user_agent'].str.contains('SM-P610', na=False, case=False) # TODO add all galaxy tab model numbers
+    )
+
     df.loc[galaxyTab_rule, 'model'] = 'GalaxyTab'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -206,6 +222,7 @@ def mark_model_xiaomiMi(didbName='didb', write_to_file=True):
         (df['vendor'].str.contains('xiaomi.mi', regex = True, na=False, case=False)) | 
         (df['hostname'].str.contains('xiaomi.mi', regex = True, na=False, case=False)) |
         (df['user_agent'].str.contains('xiaomi.mi', regex = True, na=False, case=False)) |
+        (df['user_agent'].str.contains('MI 8', na=False, case=False)) |
         (df['vendor'].str.contains('MI8', na=False, case=True)) | 
         (df['hostname'].str.contains('MI8', na=False, case=True)) |
         (df['user_agent'].str.contains('MI8', na=False, case=True))
