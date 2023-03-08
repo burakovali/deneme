@@ -8,6 +8,8 @@ from scapy.packet import Packet
 from scapy.all import *
 import re
 import pandas as pd
+import json
+import numpy as np
 
 
 
@@ -43,21 +45,17 @@ def information_element_id_parser(modified):
     processed=re.findall(r'###\[802.11InformationElement\]###\nID=(.*?)\n',modified,re.M)
     return processed
 
-def parse_assoc_df(assoc_df):
+def parse_assoc_df(assoc_df2):
+    assoc_df = pd.json_normalize(assoc_df2)
+ 
 
     ##Remove corrupted assoc data
     assoc_df=assoc_df[~assoc_df['data'].str.contains("sta")]
     assoc_df=assoc_df[~assoc_df['data'].str.contains("Error")]
+    assoc_df.dropna( axis=0,subset=None, inplace=True)
     ## Add  new columns
     assoc_df["vendors"]=""
-    assoc_df['rates']=""
-    assoc_df['capabilities']=""
-    assoc_df["information_element_id_list"]=""
     assoc_df['spatial_stream']=""
-    assoc_df['supported_channel_len']=""
-    assoc_df["first_supported_channel"]=""
-    assoc_df["supported_channel_raw"]=""
-    assoc_df["extended_capabilities_raw"]=""
     assoc_df=assoc_df.reset_index()
 
     for index,row in assoc_df.iterrows():
@@ -69,34 +67,12 @@ def parse_assoc_df(assoc_df):
         build_packet=packet.show(dump=True)
         modified=build_packet.replace(" ","")
 
-        #Parse vendor names
+        #Vendor Name List
     
         vendor_list=vendor_name_parser(modified)
         assoc_df.at[index,'vendors']=vendor_list
 
-        #Add supported rates
-
-        supported_rates_list=supported_rate_parser(modified)
-        assoc_df.at[index,'rates']=supported_rates_list
-
-        ## Add capabilities
-
-        capability_list=capability_parser(modified)
-        assoc_df.at[index,"capabilities"]=capability_list
-
-
-        ## Information Element ID
-
-        information_element_id_list=information_element_id_parser(modified)
-        assoc_df.at[index,"information_element_id_list"]=information_element_id_list
-
-            ## Supported Channels
-        supported_channel_len=supported_channel_parser(modified)
-        assoc_df.at[index,"supported_channel_len"]=supported_channel_len
-
-
-
-        ### extra
+        ### Spatial Stream
         dot11elt = packet.getlayer(Dot11Elt,ID=45)
         try:
             element_value=str(dot11elt.info.hex())[6:26]
@@ -112,22 +88,13 @@ def parse_assoc_df(assoc_df):
         
         except:
             pass
-        dot11elt = packet.getlayer(Dot11Elt,ID=36)
-        try:
-            assoc_df.at[index,"supported_channel_raw"]=dot11elt.info.hex()
-            supported_channels=dot11elt.info.hex()
-            supported_channel=supported_channels[:2]
-            supported_channels_d=int(supported_channel, base=16)
-            assoc_df.at[index,"first_supported_channel"]=supported_channels_d
-        except:
-            pass
-        dot11elt = packet.getlayer(Dot11Elt,ID=127)
-        try:
-            assoc_df.at[index,"extended_capabilities_raw"]=dot11elt.info.hex()
-        except:
-            pass
+   ##Temporarily converting to list of list for effiency 
+    assoc_df=assoc_df.groupby("device_mac", as_index=False).agg({'timestamp':'first','gw_mac':'first','spatial_stream':'first','vendors':lambda value:list(np.unique(value))})
 
-        return assoc_df
+    assoc_json= json.loads(assoc_df.to_json(orient = 'records'))
+
+  
+    return assoc_json
 
 
 

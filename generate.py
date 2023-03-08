@@ -5,6 +5,7 @@ import pickle
 import os
 import rules
 import helper
+import assoc_parser
 
 def populate_didb_withParams(didbName, rule='ALL'):
     # should be written in a better way
@@ -81,19 +82,18 @@ def create_didb(didbName='didb', write_to_file=True):
     f_dhcp_proc = open('dhcp_proc.json')
     data_dhcp_proc = json.load(f_dhcp_proc)
     f_assoc_req = open('assoc_req.json')
-    data_assoc_req = json.load(f_assoc_req)
+    data_assoc_req =  assoc_parser.parse_assoc_df(json.load(f_assoc_req))
 
     print("Creating didb...")
 
-    df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'assoc_req', 'params', 'vendor'])
-
+    df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'params', 'vendor','assoc_req_spatial_stream','assoc_req_vendors',])
     macs = []
     user_agents = []
     gw_macs = []
     hostnames = []
     assoc_reqs = []
     for item in data_ua:
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'assoc_req': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'], 'vendor': None}
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None }
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty: 
             df_devices = df_devices.append(row, ignore_index=True)
@@ -114,7 +114,7 @@ def create_didb(didbName='didb', write_to_file=True):
             thisVendor = str(item['vendor_id'])
         else:
             thisVendor = None
-        row = {'mac': item['mac'], 'user_agent': None, 'hostname': thisHostname, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'], 'vendor': thisVendor}
+        row = {'mac': item['mac'], 'user_agent': None, 'hostname': thisHostname, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'], 'vendor': thisVendor,'assoc_req_spatial_stream': None,'assoc_req_vendors':None }
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac'])
         if not df_devices[isThisDevice].empty:
             if thisHostname is not None:
@@ -135,16 +135,13 @@ def create_didb(didbName='didb', write_to_file=True):
             device_mac = helper.unColonizeMAC(item['device_mac'])
         else:
             device_mac = None
-        row = {'mac': device_mac, 'user_agent': None, 'hostname': None, 'assoc_req': item['data'], 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'], 'vendor': None}
+        row = {'mac': device_mac, 'user_agent': None, 'hostname': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': None, 'vendor': None,'assoc_req_spatial_stream':item['spatial_stream'],'assoc_req_vendors':item['vendors']}
         if not df_devices[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac'])].empty:
             # if not ('does not exist' in str(item['data'])):
-            df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'assoc_req'] = item['data']
+            df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']),[ 'assoc_req_vendors','assoc_req_spatial_stream']] = [item['vendors'],item['spatial_stream']]
         else:
             if not (device_mac == None):
-                if not ('does not exist' in str(item['data'])):
-                    # print(device_mac + ' does not exist...')
                     df_devices = df_devices.append(row, ignore_index=True)
-        assoc_reqs.append(item['data'])
 
     if write_to_file:
         helper.write_pickle(df_devices, didbName)
