@@ -7,40 +7,6 @@ import rules
 import helper
 import assoc_parser
 
-def populate_didb_withParams(didbName, rule='ALL'):
-    # should be written in a better way
-    # helper.delete_didb(didbName) # Clear the previously stored processed_didb
-    print("Running rules with op55 parameters...")
-    if rule == 'ALL':
-        for rule in rules.all_rules:
-            for ri,rv in enumerate(rule):
-                print(rv)
-                rv()
-    elif rule == 'BRAND':
-        for ri,rv in enumerate(rules.brand_rules):
-            rv()
-    elif rule == 'MODEL':
-        for ri,rv in enumerate(rules.model_rules):
-            rv()
-    elif rule == 'MODELVERSION':
-        for ri,rv in enumerate(rules.modelVersion_rules):
-            rv()
-    elif rule == 'OS':
-        for ri,rv in enumerate(rules.os_rules):
-            rv()
-    elif rule == 'OSVERSION':
-        for ri,rv in enumerate(rules.osVersion_rules):
-            rv()
-    elif rule == 'DEVICETYPE':
-        for ri,rv in enumerate(rules.deviceType_rules):
-            rv()
-    else:
-        print('RULE UNDEFINED!')
-        exit()
-            
-    df = helper.get_df(didbName)
-    return df
-
 def populate_didb(didbName, rule='ALL'):
 
     helper.delete_didb(didbName) # Clear the previously stored processed_didb
@@ -139,7 +105,6 @@ def create_didb(didbName='didb', write_to_file=True):
         if not df_devices[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac'])].empty:
             # if not ('does not exist' in str(item['data'])):
             # df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), ['assoc_req_vendors','assoc_req_spatial_stream']] = [item['vendors'], item['spatial_stream']]
-            print(item['vendors'])
             df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'assoc_req_spatial_stream'] = item['spatial_stream']
             df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'assoc_req_vendors'] = item['vendors']
         else:
@@ -280,8 +245,15 @@ def merge_didb(didbName='didb', write_to_file=True):
             if len(deviceType) == 0:
                 deviceType = ''
 
-        params = list(df[df['mac'] == mac]['params'].unique())
-    
+        try:
+            params = list(df[df['mac'] == mac]['params'].unique())
+        except:
+            params = None
+        if params is not None:
+            params = [x for x in params if str(x) != 'nan']
+            if len(params) == 0:
+                params = ''
+
         row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType, 'params': params}
 
         merged_df = merged_df.append(row, ignore_index=True)

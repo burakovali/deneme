@@ -21,11 +21,11 @@ def mark_brand_apple(didbName='didb', write_to_file=True):
         # infer from user agent
         df['user_agent'].str.contains('CaptiveNetworkSupport', na= False, case=False) |
         df['user_agent'].str.contains('com.apple', na= False, case=False) |
+        df['user_agent'].str.contains('macintosh', na=False, case=False) |
+        df['assoc_req_vendors'].str.contains('apple', na=False, case=False) |
         # infer from OS
         (df['os'] == "iOS") | (df['os'] == "macOS") | (df['os'] == "iPadOS")
     )
-
-
     df.loc[apple_rule, 'brand'] = 'Apple'
     if write_to_file:
         helper.update_didb(df, didbName)

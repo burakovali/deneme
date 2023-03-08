@@ -146,7 +146,6 @@ def mark_modelVersion_xiaomiMi(didbName='didb', write_to_file=True):
                 (df['model'] == 'Xiaomi-Mi') & df['user_agent'].str.contains("MI 8") )
     df.loc[MI8_rule, 'modelVersion'] = '8'
 
-    
     if write_to_file:
         helper.update_didb(df, didbName)
     return df

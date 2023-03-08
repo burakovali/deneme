@@ -75,7 +75,6 @@ def mark_model_macBook(didbName='didb', write_to_file=True):
         # read from hostname, user agent, vendor
         df['hostname'].str.contains('macbook', na=False, case=False) |
         df['user_agent'].str.contains('macbook', na=False, case=False) |
-        df['user_agent'].str.contains('macintosh', na=False, case=False) |
         df['vendor'].str.contains('macbook', na=False, case=False)
     )
 
