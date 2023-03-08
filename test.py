@@ -11,7 +11,7 @@ didbName = 'didb'
 
 # fetcher.get_data(type='ALL')
 
-# generate.create_didb()
+# df = generate.create_didb()
 df = generate.populate_didb(didbName, 'ALL')
 
 # create os-parameters lists for known devices
@@ -23,8 +23,8 @@ helper.write_df_to_csv(df_param, 'os_param_list.csv') """
 df = helper.get_df(didbName)
 helper.write_df_to_csv(df, 'processed_didb.csv')
 
-df = generate.merge_didb(didbName, True)
-helper.write_df_to_csv(df, 'merged_didb.csv')
+# df = generate.merge_didb(didbName, True)
+# helper.write_df_to_csv(df, 'merged_didb.csv')
 
 
 

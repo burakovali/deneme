@@ -68,7 +68,7 @@ def parse_assoc_df(assoc_df2):
         modified=build_packet.replace(" ","")
 
         #Vendor Name List
-    
+
         vendor_list=vendor_name_parser(modified)
         assoc_df.at[index,'vendors']=vendor_list
 
@@ -89,11 +89,9 @@ def parse_assoc_df(assoc_df2):
         except:
             pass
    ##Temporarily converting to list of list for effiency 
-    assoc_df=assoc_df.groupby("device_mac", as_index=False).agg({'timestamp':'first','gw_mac':'first','spatial_stream':'first','vendors':lambda value:list(np.unique(value))})
-
+    assoc_df=assoc_df.groupby(["device_mac", "gw_mac"], as_index=False).agg({'timestamp':'first', 'spatial_stream':'first', 'vendors':lambda value:str(set([item for sublist in value for item in sublist]))})
     assoc_json= json.loads(assoc_df.to_json(orient = 'records'))
 
-  
     return assoc_json
 
 
