@@ -21,11 +21,14 @@ header_string="00003c00f417b8c743fee6e4e8f88032f417b8c743fe30e3"
 
 def vendor_name_parser(modified):
     list=[]
-    processed=re.findall(r'oui=(.*?)\n',modified)
-    for current_vendor in processed:
-        result=re.search(r"(.*?)\(",current_vendor)
-        if("Ieee802.11" not in result.group(1)):
-            list.append(result.group(1))
+    try:
+        processed=re.findall(r'oui=(.*?)\n',modified)
+        for current_vendor in processed:
+            result=re.search(r"(.*?)\(",current_vendor)
+            if("Ieee802.11" not in result.group(1)):
+                list.append(result.group(1))
+    except:
+        list=[None]
     return list
 
 def supported_rate_parser(modified):
@@ -56,10 +59,12 @@ def parse_assoc_df(assoc_df2):
     ## Add  new columns
     assoc_df["vendors"]=""
     assoc_df['spatial_stream']=""
+    assoc_df['wfa_device_name']=""
     assoc_df=assoc_df.reset_index()
 
     for index,row in assoc_df.iterrows():
-    
+ 
+        wfa_device_name_list=[]
         #Decode and transform packet into a readable format
         hex_string=header_string+row['data']
         new_packet=bytes.fromhex(hex_string)
@@ -71,6 +76,7 @@ def parse_assoc_df(assoc_df2):
 
         vendor_list=vendor_name_parser(modified)
         assoc_df.at[index,'vendors']=vendor_list
+
 
         ### Spatial Stream
         dot11elt = packet.getlayer(Dot11Elt,ID=45)
@@ -88,8 +94,30 @@ def parse_assoc_df(assoc_df2):
         
         except:
             pass
-   ##Temporarily converting to list of list for effiency 
-    assoc_df=assoc_df.groupby(["device_mac", "gw_mac"], as_index=False).agg({'timestamp':'first', 'spatial_stream':'first', 'vendors':lambda value:str(set([item for sublist in value for item in sublist]))})
+
+
+
+        try:
+                dot11elt = packet.getlayer(Dot11Elt,ID=221)
+                while dot11elt :
+                    if(int(str(dot11elt.info.hex())[6:8], base=16)==9):
+                        wfa_device_name_list.append(bytes.fromhex((str(dot11elt.info.hex())[66:])).decode("ASCII"))
+                        break
+
+                    dot11elt = dot11elt.payload.getlayer(Dot11Elt)
+        except:
+            pass
+
+
+        if wfa_device_name_list:
+                assoc_df.at[index,"wfa_device_name"]=wfa_device_name_list
+        else :
+                assoc_df.at[index,"wfa_device_name"]=[None]
+
+                
+   ##Temporarily converting to list of list for effiency
+
+    assoc_df=assoc_df.groupby(["device_mac", "gw_mac"], as_index=False).agg({'timestamp':'first', 'spatial_stream':'first', 'vendors':lambda value:str(set([item for sublist in value for item in sublist])),'wfa_device_name':lambda value:str(set([item for sublist in value for item in sublist]))})
     assoc_json= json.loads(assoc_df.to_json(orient = 'records'))
 
     return assoc_json

@@ -52,14 +52,14 @@ def create_didb(didbName='didb', write_to_file=True):
 
     print("Creating didb...")
 
-    df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'params', 'vendor','assoc_req_spatial_stream','assoc_req_vendors',])
+    df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'params', 'vendor','assoc_req_spatial_stream','assoc_req_vendors','wfa_device_name'])
     macs = []
     user_agents = []
     gw_macs = []
     hostnames = []
     assoc_reqs = []
     for item in data_ua:
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None }
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None }
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty: 
             df_devices = df_devices.append(row, ignore_index=True)
@@ -80,7 +80,7 @@ def create_didb(didbName='didb', write_to_file=True):
             thisVendor = str(item['vendor_id'])
         else:
             thisVendor = None
-        row = {'mac': item['mac'], 'user_agent': None, 'hostname': thisHostname, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'], 'vendor': thisVendor,'assoc_req_spatial_stream': None,'assoc_req_vendors':None }
+        row = {'mac': item['mac'], 'user_agent': None, 'hostname': thisHostname, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'], 'vendor': thisVendor,'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None }
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac'])
         if not df_devices[isThisDevice].empty:
             if thisHostname is not None:
@@ -101,12 +101,13 @@ def create_didb(didbName='didb', write_to_file=True):
             device_mac = helper.unColonizeMAC(item['device_mac'])
         else:
             device_mac = None
-        row = {'mac': device_mac, 'user_agent': None, 'hostname': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': None, 'vendor': None,'assoc_req_spatial_stream': item['spatial_stream'], 'assoc_req_vendors': item['vendors']}
+        row = {'mac': device_mac, 'user_agent': None, 'hostname': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': None, 'vendor': None,'assoc_req_spatial_stream': item['spatial_stream'], 'assoc_req_vendors': item['vendors'],'wfa_device_name':item['wfa_device_name']}
         if not df_devices[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac'])].empty:
             # if not ('does not exist' in str(item['data'])):
             # df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), ['assoc_req_vendors','assoc_req_spatial_stream']] = [item['vendors'], item['spatial_stream']]
             df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'assoc_req_spatial_stream'] = item['spatial_stream']
             df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'assoc_req_vendors'] = item['vendors']
+            df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'wfa_device_name'] = item['wfa_device_name']
         else:
             if not (device_mac == None):
                     df_devices = df_devices.append(row, ignore_index=True)
