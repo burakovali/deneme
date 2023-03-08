@@ -22,6 +22,7 @@ def mark_brand_apple(didbName='didb', write_to_file=True):
         df['user_agent'].str.contains('CaptiveNetworkSupport', na= False, case=False) |
         df['user_agent'].str.contains('com.apple', na= False, case=False) |
         df['user_agent'].str.contains('macintosh', na=False, case=False) |
+        ## read from assoc
         df['assoc_req_vendors'].str.contains('apple', na=False, case=False) |
         # infer from OS
         (df['os'] == "iOS") | (df['os'] == "macOS") | (df['os'] == "iPadOS")
@@ -42,6 +43,8 @@ def mark_brand_samsung(didbName='didb', write_to_file=True):
         df['hostname'].str.contains('samsung', na= False, case=False) |
         #df['user_agent'].str.contains('samsung', na= False, case=False) |
         df['vendor'].str.contains('samsung', na= False, case=False) |
+        ##read from assoc
+        df['assoc_req_vendors'].str.contains('samsung', na=False, case=False) |
         # infer from model
         (df['model'] == "Galaxy") | (df['model'] == "GalaxyTab")
     )
@@ -100,6 +103,8 @@ def mark_brand_huawei(didbName='didb', write_to_file=True):
         # read from hostname, vendor or user agent
         df['hostname'].str.contains('huawei', na=False, case=False) |
         df['vendor'].str.contains('huawei', na=False, case=False) |
+        ##read from assoc
+        df['assoc_req_vendors'].str.contains('huawei', na=False, case=False) |
         #df['user_agent'].str.contains('huawei', na=False, case=False) |
         # infer from model, example: Huawei P Series
         df['model'].str.contains('huawei', na=False, case=False)
