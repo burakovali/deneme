@@ -17,7 +17,12 @@ import numpy as np
 
 header_string="00003c00f417b8c743fee6e4e8f88032f417b8c743fe30e3"
 
-
+def flatenlist(value):
+    current_list=str(set([item for sublist in value for item in sublist]))
+    if current_list== 'set()':
+        return ''
+    else:
+        return current_list
 
 def vendor_name_parser(modified):
     list=[]
@@ -28,7 +33,7 @@ def vendor_name_parser(modified):
             if("Ieee802.11" not in result.group(1)):
                 list.append(result.group(1))
     except:
-        list=[None]
+        pass
     return list
 
 def supported_rate_parser(modified):
@@ -107,13 +112,12 @@ def parse_assoc_df(assoc_df2):
 
         if wfa_device_name_list:
                 assoc_df.at[index,"wfa_device_name"] = wfa_device_name_list
-        else :
-                assoc_df.at[index,"wfa_device_name"] = [None]
+ 
 
                 
    ##Temporarily converting to list of list for effiency
 
-    assoc_df=assoc_df.groupby(["device_mac", "gw_mac"], as_index=False).agg({'timestamp':'first', 'spatial_stream':'first', 'vendors':lambda value:str(set([item for sublist in value for item in sublist])),'wfa_device_name':lambda value:str(set([item for sublist in value for item in sublist]))})
+    assoc_df=assoc_df.groupby(["device_mac", "gw_mac"], as_index=False).agg({'timestamp':'first', 'spatial_stream':'first', 'vendors':lambda value:flatenlist(value),'wfa_device_name':lambda value: flatenlist(value)})
     assoc_json= json.loads(assoc_df.to_json(orient = 'records'))
 
     return assoc_json
