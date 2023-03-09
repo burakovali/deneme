@@ -18,6 +18,7 @@ def mark_brand_apple(didbName='didb', write_to_file=True):
         df['vendor'].str.contains('apple', na= False, case=False) |
         # infer from model
         (df['model'] == "iPhone") | (df['model'] == "macBook") | (df['model'] == "macBookPro") | (df['model'] == "iPad") | (df['model'] == 'macintosh') |
+         df['model'].str.contains('apple', na= False, case=False) |
         # infer from user agent
         df['user_agent'].str.contains('CaptiveNetworkSupport', na= False, case=False) |
         df['user_agent'].str.contains('com.apple', na= False, case=False) |
@@ -25,7 +26,7 @@ def mark_brand_apple(didbName='didb', write_to_file=True):
         ## read from assoc
         df['assoc_req_vendors'].str.contains('apple', na=False, case=False) |
         # infer from OS
-        (df['os'] == "iOS") | (df['os'] == "macOS") | (df['os'] == "iPadOS")
+        (df['os'] == "iOS") | (df['os'] == "macOS") | (df['os'] == "iPadOS") | (df['os'] == "Apple TV OS")
     )
     df.loc[apple_rule, 'brand'] = 'Apple'
     if write_to_file:

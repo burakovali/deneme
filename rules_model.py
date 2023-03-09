@@ -312,3 +312,16 @@ def mark_model_air4443(didbName='didb', write_to_file=True):
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
+
+
+def mark_model_appleTV(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+
+    appleTV_rule = (
+        (df['os'].str.contains('Apple TV OS', na=False, case=False))
+    )
+    
+    df.loc[appleTV_rule, 'model'] = 'AppleTV'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df

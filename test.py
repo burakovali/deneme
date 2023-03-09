@@ -25,9 +25,8 @@ df = helper.get_df(didbName)
 helper.write_df_to_csv(df, 'processed_didb.csv')
 
 # 5 #
-#df = generate.merge_didb(didbName, True)
-#helper.write_df_to_csv(df, 'merged_didb.csv')
-
+df = generate.merge_didb(didbName, True)
+helper.write_df_to_csv(df, 'merged_didb.csv')
 
 
 # print(df['user_agent'])

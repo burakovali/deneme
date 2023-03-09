@@ -30,5 +30,21 @@ def mark_deviceType_gamingConsole(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
+def mark_deviceType_tv(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    tv_rule = (df['model'].str.contains('tv', na=False, case = False))
+    df.loc[tv_rule, 'deviceType'] = 'Smart TV'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+def mark_deviceType_tablet(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    mobile_rule = (df['model'].str.contains('tab', na= False, case = False))
+    df.loc[mobile_rule, 'deviceType'] = 'Tablet'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
 
 

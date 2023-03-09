@@ -22,12 +22,12 @@ modelVersion_rules = [rules_modelVersion.mark_modelVersion_galaxy, rules_modelVe
                       rules_modelVersion.mark_modelVersion_ThinkPad]
 
 # os_rules = [rules_os.mark_os_mac, rules_os.mark_os_iphone, rules_os.mark_os_android, rules_os.mark_os_windows, rules_os.mark_os_linux]
-os_rules = [rules_os.mark_os_iphone, rules_os.mark_os_mac, rules_os.mark_os_android,
-            rules_os.mark_os_linux, rules_os.mark_os_nintendo3SDSS, rules_os.mark_os_windows,
-            rules_os.mark_os_ipad, rules_os.mark_os_unix]
+os_rules = [rules_os.mark_os_appleTV, rules_os.mark_os_iphone, rules_os.mark_os_mac,
+            rules_os.mark_os_android, rules_os.mark_os_linux, rules_os.mark_os_nintendo3SDSS,
+            rules_os.mark_os_windows, rules_os.mark_os_ipad, rules_os.mark_os_unix]
 
 osVersion_rules = [rules_osVersion.mark_ios_version, rules_osVersion.mark_android_version, rules_osVersion.mark_windows_version, rules_osVersion.mark_macos_version, rules_osVersion.mark_modelVersion_appleOS_generic]
-deviceType_rules = [rules_deviceType.mark_deviceType_mobile, rules_deviceType.mark_deviceType_laptop, rules_deviceType.mark_deviceType_gamingConsole]
+deviceType_rules = [rules_deviceType.mark_deviceType_mobile, rules_deviceType.mark_deviceType_laptop, rules_deviceType.mark_deviceType_gamingConsole, rules_deviceType.mark_deviceType_tv, rules_deviceType.mark_deviceType_tablet]
 
 # all_rules = [brand_rules, model_rules, modelVersion_rules, os_rules, osVersion_rules, deviceType_rules]
 all_rules = [model_rules, os_rules, brand_rules, modelVersion_rules, osVersion_rules, deviceType_rules]
