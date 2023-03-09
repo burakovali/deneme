@@ -90,29 +90,25 @@ def parse_assoc_df(assoc_df2):
             elif first_unsported_mcs == 16:
                 assoc_df.at[index,"spatial_stream"]=2
             else:
-                assoc_df.at[index,"spatial_stream"]=3
-        
+                assoc_df.at[index,"spatial_stream"]=3        
         except:
             pass
-
 
 
         try:
-                dot11elt = packet.getlayer(Dot11Elt,ID=221)
-                while dot11elt :
-                    if(int(str(dot11elt.info.hex())[6:8], base=16)==9):
-                        wfa_device_name_list.append(bytes.fromhex((str(dot11elt.info.hex())[66:])).decode("ASCII"))
-                        break
-
-                    dot11elt = dot11elt.payload.getlayer(Dot11Elt)
+            dot11elt = packet.getlayer(Dot11Elt,ID=221)
+            while dot11elt :
+                if(int(str(dot11elt.info.hex())[6:8], base=16)==9):
+                    wfa_device_name_list.append(bytes.fromhex((str(dot11elt.info.hex())[66:])).decode("ASCII"))
+                    break
+                dot11elt = dot11elt.payload.getlayer(Dot11Elt)
         except:
             pass
 
-
         if wfa_device_name_list:
-                assoc_df.at[index,"wfa_device_name"]=wfa_device_name_list
+                assoc_df.at[index,"wfa_device_name"] = wfa_device_name_list
         else :
-                assoc_df.at[index,"wfa_device_name"]=[None]
+                assoc_df.at[index,"wfa_device_name"] = [None]
 
                 
    ##Temporarily converting to list of list for effiency
