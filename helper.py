@@ -75,6 +75,14 @@ def get_df(didbName):
         df = read_pickle(didbName)
     return df
 
+def get_merged_df(didbName):
+    didb_processed = str(didbName) + '_merged'
+    if os.path.exists(didb_processed):
+        df = read_pickle(didb_processed)
+    else:
+        df = read_pickle(didbName)
+    return df
+
 def update_didb(df, didbName):
     didb_processed = str(didbName) + '_processed'
     write_pickle(df, didb_processed)
