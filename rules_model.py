@@ -11,7 +11,6 @@ params_macbookPro = ['1,121,3,6,15,108,114,119,252,95,44,46', '1,121,3,6,15,119,
 params_printer = ['1,121,33,3,6,12,15,28,44,51,54,58,59,81,119,252', '6,3,1,15,12,44,81,69,42,43,18,66,67,150,7']
 params_ps5 = ['1,3,15,6']
 
-
 def mark_model_iphone(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
 
@@ -314,14 +313,14 @@ def mark_model_air4443(didbName='didb', write_to_file=True):
     return df
 
 
-def mark_model_appleTV(didbName='didb', write_to_file=True):
+def mark_model_oneday(didbName='didb', write_to_file=True): #xiaomi
     df = helper.get_df(didbName)
 
-    appleTV_rule = (
-        (df['os'].str.contains('Apple TV OS', na=False, case=False))
+    ondeday_rule = (
+        (df['user_agent'].str.contains('oneday', na=False, case=False))
     )
     
-    df.loc[appleTV_rule, 'model'] = 'AppleTV'
+    df.loc[ondeday_rule, 'model'] = 'Oneday'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df

@@ -33,6 +33,7 @@ def mark_os_iphone(didbName='didb', write_to_file=True):
     ios_rule = (
         # read ios from user agent
         df['user_agent'].str.contains("ios", na=False, case = False) |
+        df['user_agent'].str.contains("captivenetworksupport", na=False, case = False) |
         df['user_agent'].str.contains("iphone.OS", regex = True, na=False, case = False) |
         # infer from model
         df['model'].str.contains('iphone', na=False, case=False)
@@ -53,7 +54,8 @@ def mark_os_mac(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     # macos_rule = (df['brand'] == 'Apple') & ((df['model'].str.contains('mac', na=False, case=False)))
     macos_rule = (
-        df['model'].str.contains('mac', na=False, case=False)
+        df['model'].str.contains('mac', na=False, case=False) |
+        df['model'].str.contains('Darwin/22.2.0', na=False, case = False)
     )
     df.loc[macos_rule, 'os'] = 'macOS'
     #option 55
@@ -88,7 +90,8 @@ def mark_os_linux(didbName='didb', write_to_file=True):
         df['user_agent'].str.contains('X11', na=False, case=False) |
         df['hostname'].str.contains('ubuntu', na=False, case=False) |
         df['vendor'].str.contains('ubuntu', na=False, case=False) |
-        df['user_agent'].str.contains('ubuntu', na=False, case=False)
+        df['user_agent'].str.contains('ubuntu', na=False, case=False) |
+        df['user_agent'].str.contains('pacman', na=False, case=False)
     )
     linux_rule = linux_rule & (~df['user_agent'].str.contains('android', na=False, case=False))
     df.loc[linux_rule, 'os'] = 'Linux'

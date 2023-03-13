@@ -88,6 +88,13 @@ def mark_macos_version(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
+def mark_macos_from_userAgent (didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    df.loc[df['model'].str.contains('Darwin/22.2.0', na=False, case = False), 'osVersion'] = '12.2'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
 def mark_android_version(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     idx_list = []
@@ -113,6 +120,32 @@ def mark_android_version(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
+def mark_android_version_oneday(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    idx_list = []
+    version_list = []
+    for i,v in df[df['os'] == 'Android'].iterrows():
+        myversion = None
+        if not pd.isna(v['user_agent']):
+            idx = -1
+            ua_list = v['user_agent'].split('/')
+            for iua,vua in enumerate(ua_list):
+                if "oneday" in vua:
+                    idx = iua + 1
+                    break        
+            if idx != -1:
+                myversion = ua_list[idx][len(ua_list[idx])-1]
+        if myversion is not None:
+            if myversion.isdigit():
+                idx_list.append(i) 
+                version_list.append(myversion)
+    for ix, vx in enumerate(idx_list):
+        df.loc[vx, 'osVersion'] = version_list[ix].split(";")[0]
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+
 def mark_windows_version(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
 
@@ -127,4 +160,16 @@ def mark_windows_version(didbName='didb', write_to_file=True):
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
-    
+
+
+
+def mark_linux_version(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+
+    for i,v in df[df['os'] == 'Linux'].iterrows():
+        if not pd.isna(v["user_agent"]):
+            if 'Linux x86_64' in v["user_agent"]:
+                df.loc[i, 'osVersion'] = '64 bit'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
