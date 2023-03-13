@@ -9,7 +9,8 @@ import rules_brand, rules_model, rules_modelVersion, rules_os, rules_osVersion, 
 # brand_rules = [rules_brand.mark_brand_apple, rules_brand.mark_brand_samsung, rules_brand.mark_brand_hp, rules_brand.mark_brand_airties, rules_brand.mark_brand_huawei, rules_brand.mark_brand_xiaomi, rules_brand.mark_brand_lenovo, rules_brand.mark_brand_nintendo]
 brand_rules = [rules_brand.mark_brand_apple, rules_brand.mark_brand_samsung, rules_brand.mark_brand_hp,
                rules_brand.mark_brand_airties, rules_brand.mark_brand_huawei, rules_brand.mark_brand_xiaomi,
-               rules_brand.mark_brand_lenovo, rules_brand.mark_brand_sony, rules_brand.mark_brand_nintendo]
+               rules_brand.mark_brand_lenovo, rules_brand.mark_brand_sony, rules_brand.mark_brand_nintendo,
+               rules_brand.mark_brand_oui]
 # model_rules = [rules_model.mark_model_iphone, rules_model.mark_model_macBook, rules_model.mark_model_macBookPro, rules_model.mark_model_galaxy, rules_model.mark_model_galaxyTab, rules_model.mark_model_hpPrinter, rules_model.mark_model_nintendo]
 model_rules =[rules_model.mark_model_iphone, rules_model.mark_model_ipad, rules_model.mark_model_ipadPro,
                 rules_model.mark_model_macBook, rules_model.mark_model_macBookPro, rules_model.mark_model_galaxy,

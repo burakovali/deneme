@@ -6,6 +6,20 @@ import os
 import httpagentparser
 import re
 
+def get_df_oui(excel_name):
+    df = pd.read_csv(excel_name)
+    df.set_index('Assignment')
+
+    return df
+    
+def is_global(mac):
+    if mac[1] == str(2) or mac[1] == str(6) or mac[1] == "a" or mac[1] == "e":
+        # "Locally administered"
+        return False
+    else:
+        # "Globally unique"
+        return True
+    
 def hex_to_string(hex):
     if hex[:2] == '0x':
         hex = hex[2:]

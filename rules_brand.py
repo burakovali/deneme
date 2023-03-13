@@ -28,6 +28,18 @@ def mark_brand_apple(didbName='didb', write_to_file=True):
         # infer from OS
         (df['os'] == "iOS") | (df['os'] == "macOS") | (df['os'] == "iPadOS") | (df['os'] == "Apple TV OS")
     )
+
+    # look at its OUI
+    df_oui = helper.get_df_oui('oui.csv')
+    df['mac_oui'] = df['mac'].str.slice(stop=6)
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.contains("Apple", case=False, na=False)
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
+
+    apple_rule |= oui_rule
+
     df.loc[apple_rule, 'brand'] = 'Apple'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -49,6 +61,17 @@ def mark_brand_samsung(didbName='didb', write_to_file=True):
         # infer from model
         (df['model'] == "Galaxy") | (df['model'] == "GalaxyTab")
     )
+
+    # look at its OUI
+    df_oui = helper.get_df_oui('oui.csv')
+    df['mac_oui'] = df['mac'].str.slice(stop=6)
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.contains("Samsung", case=False, na=False)
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
+
+    samsung_rule |= oui_rule
 
     df.loc[samsung_rule, 'brand'] = 'Samsung'
     if write_to_file:
@@ -72,6 +95,17 @@ def mark_brand_hp(didbName='didb', write_to_file=True):
         df['model'].str.contains('elitebook', na=False, case=False)
     )
 
+    # look at its OUI
+    df_oui = helper.get_df_oui('oui.csv')
+    df['mac_oui'] = df['mac'].str.slice(stop=6)
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.startswith("HP")
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
+
+    hp_rule |= oui_rule
+
     df.loc[hp_rule, 'brand'] = 'HP'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -89,6 +123,17 @@ def mark_brand_airties(didbName='didb', write_to_file=True):
         # infer from model
         df['model'].str.contains(pat = '(Air[0-9]{4,})', regex = True, na=False, case=False)
     )
+
+    # look at its OUI
+    df_oui = helper.get_df_oui('oui.csv')
+    df['mac_oui'] = df['mac'].str.slice(stop=6)
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.contains("Airties", case=False, na=False)
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
+
+    airties_rule |= oui_rule
 
     df.loc[airties_rule, 'brand'] = 'Airties'
     if write_to_file:
@@ -111,6 +156,17 @@ def mark_brand_huawei(didbName='didb', write_to_file=True):
         df['model'].str.contains('huawei', na=False, case=False)
     )
 
+    # look at its OUI
+    df_oui = helper.get_df_oui('oui.csv')
+    df['mac_oui'] = df['mac'].str.slice(stop=6)
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.contains("Huawei", case=False, na=False)
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
+
+    huawei_rule |= oui_rule
+
     df.loc[huawei_rule, 'brand'] = 'Huawei'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -131,6 +187,17 @@ def mark_brand_xiaomi(didbName='didb', write_to_file=True):
         df['model'].str.contains('Mediapad', na=False, case=False)
     )
 
+    # look at its OUI
+    df_oui = helper.get_df_oui('oui.csv')
+    df['mac_oui'] = df['mac'].str.slice(stop=6)
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.contains("Xiaomi", case=False, na=False)
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
+
+    xiaomi_rule |= oui_rule
+
     df.loc[xiaomi_rule, 'brand'] = 'Xiaomi'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -149,6 +216,16 @@ def mark_brand_lenovo(didbName='didb', write_to_file=True):
         # infer from model
         df['model'].str.contains('ThinkPad', na=False, case=False)
     )
+    # look at its OUI
+    df_oui = helper.get_df_oui('oui.csv')
+    df['mac_oui'] = df['mac'].str.slice(stop=6)
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.contains("Lenovo", case=False, na=False)
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
+
+    lenovo_rule |= oui_rule
 
     df.loc[lenovo_rule, 'brand'] = 'Lenovo'
     if write_to_file:
@@ -170,6 +247,17 @@ def mark_brand_nintendo(didbName='didb', write_to_file=True):
         df['user_agent'].str.contains('NX NIFM', na=False, case=False)
     )
 
+    # look at its OUI
+    df_oui = helper.get_df_oui('oui.csv')
+    df['mac_oui'] = df['mac'].str.slice(stop=6)
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.contains("nintendo", case=False, na=False)
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
+
+    nintendo_rule |= oui_rule
+
     df.loc[nintendo_rule, 'brand'] = 'Nintendo'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -189,7 +277,29 @@ def mark_brand_sony(didbName='didb', write_to_file=True):
         df['os'].str.contains('FreeBSD', na=False, case=False)
     )
     
+    # look at its OUI
+    df_oui = helper.get_df_oui('oui.csv')
+    df['mac_oui'] = df['mac'].str.slice(stop=6)
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.contains("sony", case=False, na=False)
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
+
+    sony_rule |= oui_rule
+
     df.loc[sony_rule, 'brand'] = 'Sony'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+def mark_brand_oui(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    df_oui = helper.get_df_oui('oui.csv')
+    #df.loc[(df['mac'].apply(helper.is_global)) , 'brand'] = "OUI"
+    
+    df['brand'] = df.apply(lambda row: df_oui.loc[df_oui['Assignment'].str.contains(row['mac'][:6]), 'Organization Name'].iloc[0] if not df_oui.loc[df_oui['Assignment'].str.contains(row['mac'][:6]), 'Organization Name'].empty and pd.isna(row['brand']) else row['brand'], axis=1)
+
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
