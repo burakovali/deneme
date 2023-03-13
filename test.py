@@ -13,17 +13,17 @@ didbName = 'didb'
 # 1 #
 # fetcher.get_data(type='ALL')
 # 2 #
-# df = generate.create_didb()
+df = generate.create_didb()
 # 3 #
-# df = generate.populate_didb(didbName, 'ALL')
+df = generate.populate_didb(didbName, 'ALL')
 
 # create os-parameters lists for known devices
 """ df_param = generate.os_params_list(didbName, False)
 helper.write_df_to_csv(df_param, 'os_param_list.csv') """
 
 # 4 #
-# df = helper.get_df(didbName)
-# helper.write_df_to_csv(df, 'processed_didb.csv')
+df = helper.get_df(didbName)
+helper.write_df_to_csv(df, 'processed_didb.csv')
 
 # 5 #
 # df = generate.merge_didb(didbName, True)
@@ -33,7 +33,7 @@ helper.write_df_to_csv(df_param, 'os_param_list.csv') """
 # analytics.analyze_didb(didbName, False)
 
 # 7 #
-analytics.count_missing_values(didbName, False)
+# analytics.count_missing_values(didbName, False)
 
 # print(df['user_agent'])
 # for d in df['user_agent']:
