@@ -30,6 +30,8 @@ def analyze_didb(didbName='didb', write_to_file=True):
     print('All:' + str(all) + ', No os:' + str(noos) + " -> OS matching: " + str(os_matching) +'%')
     print('All:' + str(all) + ', No osVersion:' + str(noosVersion) + " -> OS Version matching: " + str(osVersion_matching) +'%')
     print('All:' + str(all) + ', No deviceType:' + str(nodeviceType) + " -> Device Type matching: " + str(deviceType_matching) +'%')
+
+
 ## Function to concanate all values
 def concanate(x):
     current_string=''
@@ -40,8 +42,6 @@ def concanate(x):
             except:
                 pass  
     return current_string
-
-        
     
 def count_missing_values(didbName='didb', write_to_file=True):
     df=helper.get_df(didbName)
@@ -61,12 +61,13 @@ def count_missing_values(didbName='didb', write_to_file=True):
     assoc_req_vendors = len(df[df['assoc_req_vendors'] == ''])
     wfa_device_name= len(df[df['wfa_device_name'] == ''])
     
-    print('There are '+str(len(df))+' unique mac addresses')
-    print(str(user_agent)+" of them are missing user agent| %"+str(100*(len(df) - user_agent)/len(df)))
-    print(str(hostname)+" of them are missing hostname| %"+str(100*(len(df) - hostname)/len(df)))
-    print(str(params)+" of them are missing params| %"+str(100*(len(df) - params)/len(df)))
-    print(str(vendor)+" of them are missing vendor| %"+str(100*(len(df) - vendor)/len(df)))
-    print(str(assoc_req_spatial_stream)+" of them are missing assoc request| %"+str(100*(len(df) - assoc_req_spatial_stream)/len(df)))
-    print(str(assoc_req_vendors)+" of them are missing assoc request vendor| %"+str(100*(len(df) - assoc_req_vendors)/len(df)))
-    print(str(wfa_device_name)+" of them are missing wfa device name| %"+str(100*(len(df) - wfa_device_name)/len(df)))
-    print(str(hostname_useragent)+ " of them are missing both hostname and user_agent| % "+  str(100-100*(len(df) - hostname_useragent)/len(df)))
+    all = len(df)
+    print(str(all)+' unique mac addresses')
+    print(str(all - user_agent)+" have useragent -> " + str(round(100*(all - user_agent)/all,2)) + '%')
+    print(str(all - hostname)+" have hostname -> "+str(round(100*(all - hostname)/all,2)) + '%')
+    print(str(all - params)+" have params -> "+str(round(100*(all - params)/all,2)) + '%')
+    print(str(all - vendor)+" have vendor -> "+str(round(100*(all - vendor)/all,2)) + '%')
+    print(str(all - assoc_req_spatial_stream)+" have assoc request -> "+str(round(100*(all - assoc_req_spatial_stream)/all,2)) + '%')
+    print(str(all - assoc_req_vendors)+" have assoc request vendor -> "+str(round(100*(all - assoc_req_vendors)/all,2)) + '%')
+    print(str(all - wfa_device_name)+" have wfa device name -> "+str(round(100*(all - wfa_device_name)/all,2)) + '%')
+    print(str(all - hostname_useragent)+ " have both hostname and user_agent -> "+  str(round(100-100*(all - hostname_useragent)/all,2)) + '%')

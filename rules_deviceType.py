@@ -17,7 +17,7 @@ def mark_deviceType_mobile(didbName='didb', write_to_file=True):
 def mark_deviceType_laptop(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     laptop_rule = (df['model'] == 'macBook') | (df['os'] == 'Windows') |(df['os'] == 'Linux') | (df['model'] == 'macBookPro') | df['user_agent'].str.contains('origin', na=False, case=False)  | df['user_agent'].str.contains('laptop', na=False, case=False) | df['user_agent'].str.contains('postman', na=False, case=False)
-    df.loc[laptop_rule, 'deviceType'] = 'Laptop'
+    df.loc[laptop_rule, 'deviceType'] = 'PC'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
