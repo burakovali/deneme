@@ -11,7 +11,7 @@ import analytics
 didbName = 'didb'
 
 # 1 #
-# fetcher.get_data(type='ALL')
+fetcher.get_data(type='ALL')
 # 2 #
 df = generate.create_didb()
 # 3 #
@@ -30,10 +30,10 @@ helper.write_df_to_csv(df, 'processed_didb.csv')
 # helper.write_df_to_csv(df, 'merged_didb.csv')
 
 # 6 #
-# analytics.analyze_didb(didbName, False)
+analytics.analyze_didb(didbName, False)
 
 # 7 #
-# analytics.count_missing_values(didbName, False)
+analytics.count_missing_values(didbName, False)
 
 # print(df['user_agent'])
 # for d in df['user_agent']:
