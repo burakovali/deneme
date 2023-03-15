@@ -14,11 +14,12 @@ brand_rules = [rules_brand.mark_brand_apple, rules_brand.mark_brand_samsung, rul
                rules_brand.mark_brand_oui]
 # model_rules = [rules_model.mark_model_iphone, rules_model.mark_model_macBook, rules_model.mark_model_macBookPro, rules_model.mark_model_galaxy, rules_model.mark_model_galaxyTab, rules_model.mark_model_hpPrinter, rules_model.mark_model_nintendo]
 model_rules =[rules_model.mark_model_iphone, rules_model.mark_model_ipad, rules_model.mark_model_ipadPro,
-                rules_model.mark_model_macBook, rules_model.mark_model_macBookPro, rules_model.mark_model_galaxy,
+                rules_model.mark_model_macBook, rules_model.mark_model_macBookPro, rules_model.mark_model_appleWatch, rules_model.mark_model_galaxy,
                 rules_model.mark_model_galaxyTab, rules_model.mark_model_hpPrinter, rules_model.mark_model_thinkpad,
                rules_model.mark_model_elitebook, rules_model.mark_model_huaweiP, rules_model.mark_model_xiaomiMi,
                rules_model.mark_model_mediapad, rules_model.mark_model_playStation, rules_model.mark_model_air4960,
                rules_model.mark_model_air4443, rules_model.mark_model_nintendo, rules_model.mark_model_oneday]
+
 modelVersion_rules = [rules_modelVersion.mark_modelVersion_galaxy, rules_modelVersion.mark_modelVersion_galaxyTab,
                       rules_modelVersion.mark_modelVersion_xiaomiMi, rules_modelVersion.mark_modelVersion_mediaPad,
                       rules_modelVersion.mark_modelVersion_ThinkPad, rules_modelVersion.mark_xiaomi_version_oneday]

@@ -107,6 +107,22 @@ def mark_model_macBookPro(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
+def mark_model_appleWatch(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+
+    appleWatch_rule = (
+        # read from hostname, user agent, vendor
+        df['assoc_req_vendors'].str.contains('apple', regex = True, na=False, case=False) &
+        df['assoc_req_vendors'].str.contains('microsoft', regex = True, na=False, case=False) &
+        ~df['assoc_req_vendors'].str.contains('epigram', regex = True, na=False, case=False) &
+        (df['assoc_req_spatial_stream'] == 1)
+    )
+
+    df.loc[appleWatch_rule, 'model'] = 'appleWatch'
+
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
 
 def mark_model_galaxy(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
