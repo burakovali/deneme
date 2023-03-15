@@ -5,7 +5,7 @@ import pickle
 import os
 import rules
 import helper
-import assoc_parser
+import assoc_parser, raw_user_agent_parse
 
 def populate_didb(didbName, rule='ALL'):
 
@@ -49,6 +49,8 @@ def create_didb(didbName='didb', write_to_file=True):
     data_dhcp_proc = json.load(f_dhcp_proc)
     f_assoc_req = open('assoc_req.json')
     data_assoc_req =  assoc_parser.parse_assoc_df(json.load(f_assoc_req))
+    f_rua = open('raw_user_agent.json')
+    data_rua = raw_user_agent_parse.parse_user_agent(json.load(f_rua))
 
     print("Creating didb...")
 
@@ -70,6 +72,17 @@ def create_didb(didbName='didb', write_to_file=True):
             df_devices.loc[isThisDevice, 'timestamp'] = item['timestamp']
         # print(item['mac'])
         # print(item['user_agent'])
+
+    for item in data_rua:
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None }
+        isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
+        if df_devices[isThisDevice].empty:
+            df_devices = df_devices.append(row, ignore_index=True)
+            macs.append(item['mac'])
+            user_agents.append(item['user_agent'])
+            gw_macs.append(item['gw_mac'])
+        else:
+            df_devices.loc[isThisDevice, 'timestamp'] = item['timestamp']
 
     for item in data_dhcp_proc:
         if (item['hostname'] != ""):

@@ -2,6 +2,7 @@ import requests, socket
 import pandas as pd
 import json
 import re
+import helper
 
 from http.server import BaseHTTPRequestHandler
 from io import BytesIO
@@ -42,11 +43,12 @@ def http_parse(data_str): ## Search get and post parse with Httprequest library
     except:
         return ''
 
-def parse_user_agent(raw_data): 
+def parse_user_agent(raw_data):
     raw_user_agent_df = pd.json_normalize(raw_data)
     raw_user_agent_df.rename({'device_mac': 'mac'}, axis=1, inplace=True)
     raw_user_agent_df['user_agent']=''
     for index,row in raw_user_agent_df.iterrows():
+        raw_user_agent_df.loc[index, 'mac'] = helper.unColonizeMAC(row['mac'])
         try:
             raw_user_agent_df.at[index,'user_agent']=regex_parse(str(bytes.fromhex(row['data'])))  # "cm.bell-labs.com"
         except Exception as e:
