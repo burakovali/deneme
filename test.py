@@ -9,13 +9,14 @@ import rules
 import analytics
 
 didbName = 'didb'
-
+ouiName = 'oui'
 # 1 #
 # fetcher.get_data(type='ALL')
 # 2 #
-# df = generate.create_didb()
+df = generate.create_didb()
+#df_oui = generate.get_ouiList()
 # 3 #
-# df = generate.populate_didb(didbName, 'ALL')
+df = generate.populate_didb(didbName, 'ALL')
 
 # create os-parameters lists for known devices
 """ df_param = generate.os_params_list(didbName, False)

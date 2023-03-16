@@ -320,3 +320,9 @@ def os_params_list(didbName='didb', write_to_file=True):
         if write_to_file:
             helper.write_pickle(osParam_df, 'os_param_list')
     return osParam_df
+
+def get_ouiList():
+    df = pd.read_csv('oui.csv')
+    df.set_index('Assignment')
+    helper.write_pickle(df, 'ouiList')
+    return df

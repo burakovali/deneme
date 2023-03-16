@@ -6,11 +6,6 @@ import os
 import httpagentparser
 import re
 
-def get_df_oui(excel_name):
-    df = pd.read_csv(excel_name)
-    df.set_index('Assignment')
-
-    return df
     
 def is_global(mac):
     if mac[1] == str(2) or mac[1] == str(6) or mac[1] == "a" or mac[1] == "e":
@@ -130,4 +125,16 @@ def colonizeMAC(mac):
     else:
         return mac
 
+def check_oui(brandName, didbName='didb'):
+    df_oui = read_pickle('ouiList')
+    df = read_pickle(didbName)
+    df['mac_oui'] = df['mac'].apply(lambda x: x[:6] if is_global(x[:6]) else None)
+    mask = df['mac_oui'].notnull()
+    df.loc[~mask, 'mac_oui'] = ''
+    mask = df_oui['Assignment'].isin(df['mac_oui'])
+    mask &= df_oui['Organization Name'].str.contains(brandName, case=False, na=False)
+    matching_rows = df_oui.loc[mask]
+    oui_rule = df['mac_oui'].isin(matching_rows['Assignment'])
+    df.drop('mac_oui', axis=1, inplace=True)
 
+    return oui_rule
