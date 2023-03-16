@@ -6,6 +6,7 @@ import os
 import rules
 import helper
 import assoc_parser, raw_user_agent_parse
+from user_agents import parse
 
 def populate_didb(didbName, rule='ALL'):
 
@@ -54,33 +55,43 @@ def create_didb(didbName='didb', write_to_file=True):
 
     print("Creating didb...")
 
-    df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'params', 'vendor','assoc_req_spatial_stream','assoc_req_vendors','wfa_device_name'])
+    df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'params', 'vendor','assoc_req_spatial_stream','assoc_req_vendors','wfa_device_name',"ua_device_family","ua_device_brand","ua_device_os"])
     macs = []
     user_agents = []
     gw_macs = []
     hostnames = []
+    ua_device_family=[]
+    ua_device_brand=[]
+    ua_device_os=[]
     assoc_reqs = []
     for item in data_ua:
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None }
+        user_agent_temp= parse(item['user_agent'])
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None,'ua_device_family':user_agent_temp.device.family,'ua_device_brand':user_agent_temp.device.brand,'ua_device_os':str(user_agent_temp.os.family) }
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty: 
             df_devices = df_devices.append(row, ignore_index=True)
             macs.append(item['mac'])
             user_agents.append(item['user_agent'])
             gw_macs.append(item['gw_mac'])
+            ua_device_family.append(user_agent_temp.device.family)
+            ua_device_brand.append(user_agent_temp.device.brand)
+            ua_device_os.append(str(user_agent_temp.os.family))
         else:
             df_devices.loc[isThisDevice, 'timestamp'] = item['timestamp']
         # print(item['mac'])
         # print(item['user_agent'])
 
     for item in data_rua:
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None }
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None,'ua_device_family':user_agent_temp.device.family,'ua_device_brand':user_agent_temp.device.brand,'ua_device_os':str(user_agent_temp.os.family) }
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty:
             df_devices = df_devices.append(row, ignore_index=True)
             macs.append(item['mac'])
             user_agents.append(item['user_agent'])
             gw_macs.append(item['gw_mac'])
+            ua_device_family.append(user_agent_temp.device.family)
+            ua_device_brand.append(user_agent_temp.device.brand)
+            ua_device_os.append(str(user_agent_temp.os.family))
         else:
             df_devices.loc[isThisDevice, 'timestamp'] = item['timestamp']
 
