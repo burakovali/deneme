@@ -60,4 +60,13 @@ def mark_deviceType_homeDevice(didbName='didb', write_to_file=True):
     return df
 
 
+def mark_deviceType_VR(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    tv_rule = (df['model'].str.contains('Quest', na=False, case = False))
+    df.loc[tv_rule, 'deviceType'] = 'VR Headset'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+
 

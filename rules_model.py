@@ -340,3 +340,16 @@ def mark_model_oneday(didbName='didb', write_to_file=True): #xiaomi
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
+
+def mark_model_quest(didbName='didb', write_to_file=True): #quest
+    df = helper.get_df(didbName)
+
+    ondeday_rule = (
+        (df['user_agent'].str.contains('quest', na=False, case=False))
+    )
+    
+    df.loc[ondeday_rule, 'model'] = 'Quest'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
