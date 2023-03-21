@@ -16,7 +16,7 @@ ouiName = 'oui'
 # df = generate.create_didb()
 #df_oui = generate.get_ouiList()
 # 3 #
-# df = generate.populate_didb(didbName, 'ALL', True)
+df = generate.populate_didb(didbName, 'ALL', True)
 
 # create os-parameters lists for known devices
 """ df_param = generate.os_params_list(didbName, False)
@@ -31,7 +31,7 @@ helper.write_df_to_csv(df_param, 'os_param_list.csv') """
 # helper.write_df_to_csv(df, 'merged_didb.csv')
 
 # 6 #
-analytics.analyze_didb(didbName, False)
+# analytics.analyze_didb(didbName, False)
 
 # 7 #
 # analytics.count_missing_values(didbName, False)

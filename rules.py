@@ -42,7 +42,7 @@ osVersion_rules = [rules_osVersion.mark_ios_version,
 
 deviceType_rules = [rules_deviceType.mark_deviceType_mobile, rules_deviceType.mark_deviceType_pc, rules_deviceType.mark_deviceType_gamingConsole, rules_deviceType.mark_deviceType_tv, rules_deviceType.mark_deviceType_tablet, rules_deviceType.mark_deviceType_homeDevice, rules_deviceType.mark_deviceType_VR, rules_deviceType.mark_deviceType_watch, rules_deviceType.mark_deviceType_printer]
 
-revisit_rules = [rules_combined.mark_model_mac]
+revisit_rules = [rules_combined.mark_model_mac, rules_combined.mark_deviceType_pc]
 
 # all_rules = [brand_rules, model_rules, modelVersion_rules, os_rules, osVersion_rules, deviceType_rules]
 all_rules = [model_rules, os_rules, brand_rules, modelVersion_rules, osVersion_rules, deviceType_rules, revisit_rules]
