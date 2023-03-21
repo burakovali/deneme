@@ -45,12 +45,19 @@ def populate_didb(didbName, rule='ALL'):
 def create_didb(didbName='didb', write_to_file=True):
 
     f_ua = open('user_agent.json')
+    print("Loading user_agent.json...")
     data_ua = json.load(f_ua)
+
     f_dhcp_proc = open('dhcp_proc.json')
+    print("Loading dhcp_proc.json...")
     data_dhcp_proc = json.load(f_dhcp_proc)
+
     f_assoc_req = open('assoc_req.json')
+    print("Loading assoc_req.json...")
     data_assoc_req =  assoc_parser.parse_assoc_df(json.load(f_assoc_req))
+
     f_rua = open('raw_user_agent.json')
+    print("Loading raw_user_agent.json...")
     data_rua = raw_user_agent_parse.parse_user_agent(json.load(f_rua))
 
     print("Creating didb...")
@@ -331,9 +338,3 @@ def os_params_list(didbName='didb', write_to_file=True):
         if write_to_file:
             helper.write_pickle(osParam_df, 'os_param_list')
     return osParam_df
-
-def get_ouiList():
-    df = pd.read_csv('oui.csv')
-    df.set_index('Assignment')
-    helper.write_pickle(df, 'ouiList')
-    return df

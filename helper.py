@@ -5,15 +5,15 @@ import pickle
 import os
 import httpagentparser
 import re
+import fetcher
 
     
 def is_global(mac):
     if mac[1] == str(2) or mac[1] == str(6) or mac[1] == "a" or mac[1] == "e":
         # "Locally administered"
         return False
-    else:
-        # "Globally unique"
-        return True
+    # "Globally unique"
+    return True
     
 def hex_to_string(hex):
     if hex[:2] == '0x':
@@ -74,6 +74,8 @@ def read_pickle(fileName):
     if os.path.exists(filePath):
         with open(filePath, 'rb') as thefile:
             data = pickle.load(thefile)
+    else:
+        raise Exception("Pickle " + str(filePath) + " does not exist")
     return data
 
 def get_df(didbName):
@@ -125,8 +127,18 @@ def colonizeMAC(mac):
     else:
         return mac
 
+def check_if_file_exists(fileName):
+    filePath = os.path.join(fileName)
+    if os.path.exists(filePath):
+        return True
+    return False
+
 def check_oui(brandName, didbName='didb'):
-    df_oui = read_pickle('ouiList')
+    if check_if_file_exists('ouiList'):
+        df_oui = read_pickle('ouiList')
+    else:
+        df_oui = fetcher.get_ouiList()
+
     df = read_pickle(didbName)
     df['mac_oui'] = df['mac'].apply(lambda x: x[:6] if is_global(x[:6]) else None)
     mask = df['mac_oui'].notnull()

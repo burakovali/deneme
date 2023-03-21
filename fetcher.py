@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import pickle
 import os
+import helper
 
 # DHCP http://cloud-dpi.herokuapp.com/api/dhcp_processed_api/
 # DHCP unprocessed http://cloud-dpi.herokuapp.com/api/dhcp_api/
@@ -38,3 +39,9 @@ def get_data(type='ALL'):
             json.dump(res_raw_user_agent.json(), f)
         with open("assoc_req.json", "w") as f:
             json.dump(res_assoc_req.json(), f)
+
+def get_ouiList():
+    df = pd.read_csv('oui.csv')
+    df.set_index('Assignment')
+    helper.write_pickle(df, 'ouiList')
+    return df
