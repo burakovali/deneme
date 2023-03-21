@@ -21,8 +21,9 @@ def analyze_didb(didbName='didb', write_to_file=True):
     # print(len(df))
 
     all = len(df)
-    iswifi = len(df[df['isWiFi']])
-    wifi_percentage = round(100*(all - iswifi)/all,1) 
+    all_wifi = len(df[df['isWiFi']])
+    wifi_percentage = round(100*(all - all_wifi)/all,1)
+
     nobrand = len(df[df['brand'] == ''])
     brand_matching = round(100*(all - nobrand)/all,1)
     nomodel = len(df[df['model'] == ''])
@@ -36,13 +37,34 @@ def analyze_didb(didbName='didb', write_to_file=True):
     nodeviceType = len(df[df['deviceType'] == ''])
     deviceType_matching = round(100*(all - nodeviceType)/all,1)
 
-    print('All:' + str(all) + ', is WiFi:' + str(iswifi) + " -> Wi-Fi percentage: " + str(wifi_percentage) +'%')
-    print('All:' + str(all) + ', No brand:' + str(nobrand) + " -> Brand matching: " + str(brand_matching) +'%')
-    print('All:' + str(all) + ', No model:' + str(nomodel) + " -> Model matching: " + str(model_matching) +'%')
-    print('All:' + str(all) + ', No modelVersion:' + str(nomodelVersion) + " -> Model Version matching: " + str(modelVersion_matching) +'%')
-    print('All:' + str(all) + ', No os:' + str(noos) + " -> OS matching: " + str(os_matching) +'%')
-    print('All:' + str(all) + ', No osVersion:' + str(noosVersion) + " -> OS Version matching: " + str(osVersion_matching) +'%')
-    print('All:' + str(all) + ', No deviceType:' + str(nodeviceType) + " -> Device Type matching: " + str(deviceType_matching) +'%')
+    nobrand_wifi = len(df[(df['brand'] == '') & (df['isWiFi'] == True)])
+    brand_matching_wifi = round(100*(all_wifi - nobrand_wifi)/all_wifi,1)
+    nomodel_wifi = len(df[(df['model'] == '') & (df['isWiFi'] == True)])
+    model_matching_wifi = round(100*(all_wifi - nomodel_wifi)/all_wifi,1)
+    nomodelVersion_wifi = len(df[(df['modelVersion'] == '') & (df['isWiFi'] == True)])
+    modelVersion_matching_wifi = round(100*(all_wifi - nomodelVersion_wifi)/all,1)
+    noos_wifi = len(df[(df['os'] == '') & (df['isWiFi'] == True)])
+    os_matching_wifi = round(100*(all_wifi - noos_wifi)/all_wifi,1)
+    noosVersion_wifi = len(df[(df['osVersion'] == '') & (df['isWiFi'] == True)])
+    osVersion_matching_wifi = round(100*(all_wifi - noosVersion_wifi)/all,1)
+    nodeviceType_wifi = len(df[(df['deviceType'] == '') & (df['isWiFi'] == True)])
+    deviceType_matching_wifi = round(100*(all_wifi - nodeviceType_wifi)/all_wifi,1)
+
+
+    print('All:' + str(all) + ', is WiFi:' + str(all_wifi) + " -> Wi-Fi percentage: " + str(wifi_percentage) +'%')
+    print('All:' + str(all) + ', No brand:' + str(nobrand) + " -> Brands identified: " + str(brand_matching) +'%')
+    print('All:' + str(all) + ', No model:' + str(nomodel) + " -> Models identified: " + str(model_matching) +'%')
+    print('All:' + str(all) + ', No modelVersion:' + str(nomodelVersion) + " -> Model Versions identified: " + str(modelVersion_matching) +'%')
+    print('All:' + str(all) + ', No os:' + str(noos) + " -> OSes identified: " + str(os_matching) +'%')
+    print('All:' + str(all) + ', No osVersion:' + str(noosVersion) + " -> OS Versions identified: " + str(osVersion_matching) +'%')
+    print('All:' + str(all) + ', No deviceType:' + str(nodeviceType) + " -> Device Types identified: " + str(deviceType_matching) +'%')
+    print("----")
+    print('Wi-Fi:' + str(all_wifi) + ', No brand:' + str(nobrand_wifi) + " -> Brands identified: " + str(brand_matching_wifi) +'%')
+    print('Wi-Fi:' + str(all_wifi) + ', No model:' + str(nomodel_wifi) + " -> Models identified: " + str(model_matching_wifi) +'%')
+    print('Wi-Fi:' + str(all_wifi) + ', No modelVersion:' + str(nomodelVersion_wifi) + " -> Model Versions identified: " + str(modelVersion_matching_wifi) +'%')
+    print('Wi-Fi:' + str(all_wifi) + ', No os:' + str(noos_wifi) + " -> OSes identified: " + str(os_matching_wifi) +'%')
+    print('Wi-Fi:' + str(all_wifi) + ', No osVersion:' + str(noosVersion_wifi) + " -> OS Versions identified: " + str(osVersion_matching_wifi) +'%')
+    print('Wi-Fi:' + str(all_wifi) + ', No deviceType:' + str(nodeviceType_wifi) + " -> Device Types identified: " + str(deviceType_matching_wifi) +'%')
 
 
 ## Function to concanate all values
