@@ -14,9 +14,9 @@ def mark_deviceType_mobile(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
-def mark_deviceType_laptop(didbName='didb', write_to_file=True):
+def mark_deviceType_pc(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
-    laptop_rule = ((df['model'] == 'macBook') | (df['os'] == 'Windows') |
+    laptop_rule = ((df['model'] == 'macBook') | (df['model'] == 'mac') | (df['os'] == 'Windows') |
         (df['os'] == 'Linux') | (df['model'] == 'macBookPro') |
         df['user_agent'].str.contains('origin', na=False, case=False) |
         df['user_agent'].str.contains('laptop', na=False, case=False) |
@@ -29,7 +29,7 @@ def mark_deviceType_laptop(didbName='didb', write_to_file=True):
 
 def mark_deviceType_gamingConsole(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
-    gamingConsole_rule = (df['model'] == 'Nintendo 3DS') | (df['model'] == 'PS5')
+    gamingConsole_rule = (df['model'] == 'Nintendo 3DS') | (df['model'] == 'PS5') | (df['model'].str.contains('playstation', na=False, case=False))
     df.loc[gamingConsole_rule, 'deviceType'] = 'Gaming Console'
     if write_to_file:
         helper.update_didb(df, didbName)
@@ -59,7 +59,6 @@ def mark_deviceType_homeDevice(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
-
 def mark_deviceType_VR(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     tv_rule = (df['model'].str.contains('Quest', na=False, case = False))
@@ -68,5 +67,20 @@ def mark_deviceType_VR(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
+def mark_deviceType_watch(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    tv_rule = (df['model'].str.contains('watch', na=False, case = False))
+    df.loc[tv_rule, 'deviceType'] = 'Watch'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+def mark_deviceType_printer(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    tv_rule = (df['model'].str.contains('printer', na=False, case = False))
+    df.loc[tv_rule, 'deviceType'] = 'Printer'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
 
 
