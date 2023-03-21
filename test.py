@@ -2,11 +2,11 @@ import requests
 import json
 import pandas as pd
 import pickle
-import os
+import os, re
 import helper, fetcher
 import generate
 import rules
-import analytics
+import analytics, query
 
 didbName = 'didb'
 ouiName = 'oui'
@@ -16,7 +16,7 @@ ouiName = 'oui'
 # df = generate.create_didb()
 #df_oui = generate.get_ouiList()
 # 3 #
-# df = generate.populate_didb(didbName, 'ALL')
+# df = generate.populate_didb(didbName, 'ALL', True)
 
 # create os-parameters lists for known devices
 """ df_param = generate.os_params_list(didbName, False)
@@ -34,7 +34,12 @@ helper.write_df_to_csv(df_param, 'os_param_list.csv') """
 analytics.analyze_didb(didbName, False)
 
 # 7 #
-analytics.count_missing_values(didbName, False)
+# analytics.count_missing_values(didbName, False)
+
+
+# 8 #
+# query.query_by_mac(didbName, '78:4f:43:a0:98:72')
+# query.query_by_brand(didbName, 'apple')
 
 # print(df['user_agent'])
 # for d in df['user_agent']:

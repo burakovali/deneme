@@ -174,3 +174,15 @@ def mark_os_unix(didbName='didb', write_to_file=True):
     
     if write_to_file:
         helper.update_didb(df, didbName)
+
+def mark_missing_os_from_uaparser(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+
+    no_os = df['os'].isna() & (df['ua_device_os'] != 'Other')
+
+    df.loc[no_os, 'os'] = df.loc[no_os, 'ua_device_os']
+
+    if write_to_file:
+        helper.update_didb(df, didbName)
+
+    return df

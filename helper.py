@@ -23,7 +23,7 @@ def hex_to_string(hex):
 
 def check_if_valid_mac(mac):
     if mac is not None:
-        if re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", mac.lower()):
+        if re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", mac.lower()) and (mac != '000000000000'):
             return True
     return False
 
