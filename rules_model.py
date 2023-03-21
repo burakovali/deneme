@@ -115,8 +115,13 @@ def mark_model_appleWatch(didbName='didb', write_to_file=True):
         df['assoc_req_vendors'].str.contains('apple', regex = True, na=False, case=False) &
         df['assoc_req_vendors'].str.contains('microsoft', regex = True, na=False, case=False) &
         ~df['assoc_req_vendors'].str.contains('epigram', regex = True, na=False, case=False) &
+        (df['assoc_req_spatial_stream'] == 1)) | \
+            (df['assoc_req_vendors'].str.contains('apple', regex = True, na=False, case=False) &
+        df['assoc_req_vendors'].str.contains('microsoft', regex = True, na=False, case=False) &
+        df['assoc_req_vendors'].str.contains('epigram', regex = True, na=False, case=False) &
+        df['assoc_req_vendors'].str.contains('broadcom', regex = True, na=False, case=False) &
         (df['assoc_req_spatial_stream'] == 1)
-    )
+         )
 
     df.loc[appleWatch_rule, 'model'] = 'appleWatch'
 

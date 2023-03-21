@@ -26,9 +26,9 @@ modelVersion_rules = [rules_modelVersion.mark_modelVersion_galaxy, rules_modelVe
                       rules_modelVersion.mark_modelVersion_ThinkPad, rules_modelVersion.mark_xiaomi_version_oneday]
 
 # os_rules = [rules_os.mark_os_mac, rules_os.mark_os_iphone, rules_os.mark_os_android, rules_os.mark_os_windows, rules_os.mark_os_linux]
-os_rules = [rules_os.mark_os_appleTV, rules_os.mark_os_iphone, rules_os.mark_os_mac,
-            rules_os.mark_os_android, rules_os.mark_os_linux, rules_os.mark_os_nintendo3SDSS,
-            rules_os.mark_os_windows, rules_os.mark_os_ipad, rules_os.mark_os_unix, 
+os_rules = [rules_os.mark_os_appleTV, rules_os.mark_os_iphone, rules_os.mark_os_mac, rules_os.mark_os_appleWatch,\
+            rules_os.mark_os_android, rules_os.mark_os_linux, rules_os.mark_os_nintendo3SDSS,\
+            rules_os.mark_os_windows, rules_os.mark_os_ipad, rules_os.mark_os_unix,\
             rules_os.mark_missing_os_from_uaparser] #This always has to be the last rule! Do not change this!
 
 osVersion_rules = [rules_osVersion.mark_ios_version,

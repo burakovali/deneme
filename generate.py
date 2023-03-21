@@ -226,7 +226,7 @@ def merge_didb(didbName='didb', write_to_file=True):
 
     macList = list(df['mac'].unique())
 
-    merged_df = pd.DataFrame(columns=['mac', 'gw_mac', 'brand', 'model', 'modelVersion', 'os', 'osVersion', 'deviceType', 'params', 'isWiFi'])
+    merged_df = pd.DataFrame(columns=['mac', 'gw_mac', 'brand', 'model', 'modelVersion', 'os', 'osVersion', 'deviceType', 'isWiFi', 'params'])
 
     for mac in macList:
         # print(mac)

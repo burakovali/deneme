@@ -126,7 +126,6 @@ def mark_os_android(didbName='didb', write_to_file=True):
 
 def mark_os_nintendo3SDSS(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
-    # android_rule = (df['user_agent'].str.contains('android', na=False, case=False)) | (df['vendor'].str.contains('android', na=False, case=False))
     
     nintendoOS_rule = (
         # infer from model
@@ -154,6 +153,16 @@ def mark_os_ipad(didbName='didb', write_to_file=True):
     )
     
     df.loc[ipadOS_rule, 'os'] = 'iPadOS'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+def mark_os_appleWatch(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+
+    appleWatchOS_rule = df['model'].str.contains('appleWatch', na=False, case=False)
+    
+    df.loc[appleWatchOS_rule, 'os'] = 'watchOS'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
