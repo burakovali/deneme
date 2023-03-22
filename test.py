@@ -16,7 +16,7 @@ ouiName = 'oui'
 # df = generate.create_didb()
 #df_oui = generate.get_ouiList()
 # 3 #
-# df = generate.populate_didb(didbName, 'ALL', True)
+df = generate.populate_didb(didbName, 'ALL', True)
 
 # create os-parameters lists for known devices
 """ df_param = generate.os_params_list(didbName, False)
@@ -43,7 +43,7 @@ helper.write_df_to_csv(df_param, 'os_param_list.csv') """
 # query.query_by_model(didbName, 'iphone')
 # query.query_by_params(didbName, '1-121-3-6-15-108-114-119-252')
 # query.query_by_timestamp(didbName, '2023-03-10T10:41:04', '2023-03-11T10:41:04')
-query.query_by_gwmac(didbName, '00:1c:7f:81:58:27')
+# query.query_by_gwmac(didbName, '00:1c:7f:81:58:27')
 
 # print(df['user_agent'])
 # for d in df['user_agent']:

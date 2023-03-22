@@ -226,13 +226,14 @@ def merge_didb(didbName='didb', write_to_file=True):
 
     macList = list(df['mac'].unique())
 
-    merged_df = pd.DataFrame(columns=['mac', 'gw_mac', 'brand', 'model', 'modelVersion', 'os', 'osVersion', 'deviceType', 'isWiFi', 'timestamp', 'params'])
+    merged_df = pd.DataFrame(columns=['mac', 'gw_mac', 'brand', 'model', 'modelVersion', 'os', 'osVersion', 'deviceType', 'isWiFi', 'isRandom', 'timestamp', 'params'])
 
     for mac in macList:
         # print(mac)
         if not helper.check_if_valid_mac(mac):
             # print("Not valid mac!")
             continue
+        isRandom = helper.is_random(mac)
         sta_mac = helper.colonizeMAC(mac)
         gw_mac = list(df[df['mac'] == mac]['gw_mac'].unique())
         gw_mac = [x for x in gw_mac if str(x) != 'nan']
@@ -250,7 +251,6 @@ def merge_didb(didbName='didb', write_to_file=True):
             if len(brand) == 0:
                 brand = ''
         
-
         try:
             model = list(df[df['mac'] == mac]['model'].unique())
         except:
@@ -335,7 +335,7 @@ def merge_didb(didbName='didb', write_to_file=True):
                 latest_timestamp = max(timestamp)
                 # timestamp = ', '.join(timestamp)
 
-        row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType, 'timestamp': latest_timestamp, 'params': params, 'isWiFi': iswifi}
+        row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType, 'timestamp': latest_timestamp, 'params': params, 'isWiFi': iswifi, 'isRandom': isRandom}
 
         merged_df = merged_df.append(row, ignore_index=True)
 

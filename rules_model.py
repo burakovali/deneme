@@ -350,7 +350,7 @@ def mark_model_quest(didbName='didb', write_to_file=True): #quest
     df = helper.get_df(didbName)
 
     quest_rule = (
-        (df['user_agent'].str.contains('quest', na=False, case=False))
+        (df['user_agent'].str.contains(' quest ', regex=False, na=False, case=False))
     )
     
     df.loc[quest_rule, 'model'] = 'Quest'

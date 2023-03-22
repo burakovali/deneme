@@ -267,8 +267,7 @@ def mark_brand_meta(didbName='didb', write_to_file=True):
     
     meta_rule = (
         # read from hostname, user agent, vendor
-        df['user_agent'].str.contains('Quest', na=False, case=False)|
-        df['user_agent'].str.contains('Oculus', na=False, case=False)
+        (df['model'] == 'Quest') | (df['user_agent'].str.contains('Oculus', na=False, case=False))
     )
     # look at its OUI
     oui_rule = helper.check_oui('Meta')

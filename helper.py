@@ -14,6 +14,11 @@ def is_global(mac):
         return False
     # "Globally unique"
     return True
+
+def is_random(mac):
+    if mac[1] == str(2) or mac[1] == str(6) or mac[1] == "a" or mac[1] == "e":
+        return True
+    return False
     
 def hex_to_string(hex):
     if hex[:2] == '0x':
