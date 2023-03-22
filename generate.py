@@ -78,7 +78,7 @@ def create_didb(didbName='didb', write_to_file=True):
     print("Running user_agent...")
     for item in data_ua:
         user_agent_temp= parse(item['user_agent'])
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None,'ua_device_family':user_agent_temp.device.family,'ua_device_brand':user_agent_temp.device.brand,'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None,'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty: 
             df_devices = df_devices.append(row, ignore_index=True)
@@ -95,7 +95,7 @@ def create_didb(didbName='didb', write_to_file=True):
         # print(item['user_agent'])
     print("Running Raw user_agent...")
     for item in data_rua:
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'],'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None,'ua_device_family':user_agent_temp.device.family,'ua_device_brand':user_agent_temp.device.brand,'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None,'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty:
             df_devices = df_devices.append(row, ignore_index=True)
@@ -119,7 +119,7 @@ def create_didb(didbName='didb', write_to_file=True):
             thisVendor = str(item['vendor_id'])
         else:
             thisVendor = None
-        row = {'mac': item['mac'], 'user_agent': None, 'hostname': thisHostname, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'], 'vendor': thisVendor,'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None, 'isWiFi': False}
+        row = {'mac': item['mac'], 'user_agent': None, 'hostname': thisHostname, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'].replace(',','-'), 'vendor': thisVendor,'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None, 'isWiFi': False}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac'])
         if not df_devices[isThisDevice].empty:
             if thisHostname is not None:
@@ -305,12 +305,12 @@ def merge_didb(didbName='didb', write_to_file=True):
             params = list(df[df['mac'] == mac]['params'].unique())
         except:
             params = None
-
         if params is not None:
-            params = [x for x in params if str(x) != 'nan']   
-            # params = ','.join(params)
-            if len(params) == 0:
+            params = [x for x in params if str(x) != 'nan']
+            if len(params) == 0 or None in params:
                 params = ''
+            else:
+                params = ', '.join(params)
 
         try:
             iswifi = list(df[df['mac'] == mac]['isWiFi'].unique())
