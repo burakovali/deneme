@@ -78,7 +78,7 @@ def create_didb(didbName='didb', write_to_file=True):
     print("Running user_agent...")
     for item in data_ua:
         user_agent_temp= parse(item['user_agent'])
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None,'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None,'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty: 
             df_devices = df_devices.append(row, ignore_index=True)
@@ -95,7 +95,7 @@ def create_didb(didbName='didb', write_to_file=True):
         # print(item['user_agent'])
     print("Running Raw user_agent...")
     for item in data_rua:
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None,'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None,'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None,'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty:
             df_devices = df_devices.append(row, ignore_index=True)
@@ -120,20 +120,21 @@ def create_didb(didbName='didb', write_to_file=True):
         else:
             thisVendor = None
         row = {'mac': item['mac'], 'user_agent': None, 'hostname': thisHostname, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'].replace(',','-'), 'vendor': thisVendor,'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None, 'isWiFi': False}
-        isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac'])
-        if not df_devices[isThisDevice].empty:
-            if thisHostname is not None:
-                hostname_idx = list(df_devices.loc[isThisDevice, 'hostname'].index)
-                for idx in hostname_idx:
-                    if (df_devices.loc[idx, 'hostname'] != None):
-                        hostname = df_devices.loc[idx, 'hostname']
-                        if (thisHostname not in hostname):
-                            df_devices.loc[idx, 'hostname'] = df_devices.loc[idx, 'hostname'] + ',' + thisHostname
-                            df_devices.loc[idx, 'timestamp'] = df_devices.loc[idx, 'timestamp'] + ',' + item['timestamp']
-                            df_devices.loc[idx, 'isWiFi'] = False
-        
-        else:
+        isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["hostname"] == thisHostname)
+        # if not df_devices[isThisDevice].empty:
+        #     if thisHostname is not None:
+        #         hostname_idx = list(df_devices.loc[isThisDevice, 'hostname'].index)
+        #         for idx in hostname_idx:
+        #             if (df_devices.loc[idx, 'hostname'] != None):
+        #                 hostname = df_devices.loc[idx, 'hostname']
+        #                 if (thisHostname not in hostname):
+        #                     df_devices.loc[idx, 'hostname'] = df_devices.loc[idx, 'hostname'] + ',' + thisHostname
+        #                     df_devices.loc[idx, 'timestamp'] = df_devices.loc[idx, 'timestamp'] + ',' + item['timestamp']
+        #                     df_devices.loc[idx, 'isWiFi'] = False
+        if df_devices[isThisDevice].empty:
             df_devices = df_devices.append(row, ignore_index=True)
+        else:
+            df_devices.loc[isThisDevice, 'timestamp'] = item['timestamp']
         hostnames.append(thisHostname)
     
     print("Running assoc_req...")
