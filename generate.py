@@ -95,7 +95,7 @@ def create_didb(didbName='didb', write_to_file=True):
         # print(item['user_agent'])
     print("Running Raw user_agent...")
     for item in data_rua:
-        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None,'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
+        row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None, 'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty:
             df_devices = df_devices.append(row, ignore_index=True)
@@ -119,7 +119,12 @@ def create_didb(didbName='didb', write_to_file=True):
             thisVendor = str(item['vendor_id'])
         else:
             thisVendor = None
-        row = {'mac': item['mac'], 'user_agent': None, 'hostname': thisHostname, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': item['parameters'].replace(',','-'), 'vendor': thisVendor,'assoc_req_spatial_stream': None,'assoc_req_vendors':None,'wfa_device_name':None, 'isWiFi': False}
+        if (item['parameters'] != ""):
+            thisParams = str(item['parameters'])
+            thisParams = thisParams.replace(',','-')
+        else:
+            thisParams = None
+        row = {'mac': item['mac'], 'user_agent': None, 'hostname': thisHostname, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'params': thisParams, 'vendor': thisVendor, 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None, 'wfa_device_name':None, 'isWiFi': False}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["hostname"] == thisHostname)
         # if not df_devices[isThisDevice].empty:
         #     if thisHostname is not None:
@@ -227,7 +232,7 @@ def merge_didb(didbName='didb', write_to_file=True):
 
     macList = list(df['mac'].unique())
 
-    merged_df = pd.DataFrame(columns=['mac', 'gw_mac', 'brand', 'model', 'modelVersion', 'os', 'osVersion', 'deviceType', 'isWiFi', 'isRandom', 'timestamp', 'params'])
+    merged_df = pd.DataFrame(columns=['mac', 'gw_mac', 'brand', 'model', 'modelVersion', 'os', 'osVersion', 'deviceType', 'isWiFi', 'isRandom', 'timestamp', 'hostname', 'params'])
 
     for mac in macList:
         # print(mac)
@@ -307,8 +312,8 @@ def merge_didb(didbName='didb', write_to_file=True):
         except:
             params = None
         if params is not None:
-            params = [x for x in params if str(x) != 'nan']
-            if len(params) == 0 or None in params:
+            params = [x for x in params if str(x) != 'nan' and x is not None]
+            if len(params) == 0:
                 params = ''
             else:
                 params = ', '.join(params)
@@ -336,7 +341,18 @@ def merge_didb(didbName='didb', write_to_file=True):
                 latest_timestamp = max(timestamp)
                 # timestamp = ', '.join(timestamp)
 
-        row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType, 'timestamp': latest_timestamp, 'params': params, 'isWiFi': iswifi, 'isRandom': isRandom}
+        try:
+            hostName = list(df[df['mac'] == mac]['hostname'].unique())
+        except:
+            hostName = None
+        if hostName is not None:
+            hostName = [x for x in hostName if str(x) != 'nan' and x is not None]
+            if len(hostName) == 0:
+                hostName = ''
+            else:
+                hostName = ', '.join(hostName)
+
+        row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType, 'timestamp': latest_timestamp, 'params': params, 'isWiFi': iswifi, 'isRandom': isRandom, 'hostName': hostName}
 
         merged_df = merged_df.append(row, ignore_index=True)
 
