@@ -111,6 +111,7 @@ def mark_os_android(didbName='didb', write_to_file=True):
         df['hostname'].str.contains('android', na=False, case=False) |
         df['vendor'].str.contains('android', na=False, case=False) |
         df['user_agent'].str.contains('android', na=False, case=False) |
+        df['user_agent'].str.contains('dalvik',na=False,case=False)|
         # infer from model
         df['model'].str.contains('galaxy', na=False, case=False) 
         # type is mobile and brand is not apple
