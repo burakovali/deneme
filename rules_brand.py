@@ -127,11 +127,13 @@ def mark_brand_huawei(didbName='didb', write_to_file=True):
         # read from hostname, vendor or user agent
         df['hostname'].str.contains('huawei', na=False, case=False) |
         df['vendor'].str.contains('huawei', na=False, case=False) |
+        
         ##read from assoc
         df['assoc_req_vendors'].str.contains('huawei', na=False, case=False) |
         #df['user_agent'].str.contains('huawei', na=False, case=False) |
         # infer from model, example: Huawei P Series
-        df['model'].str.contains('huawei', na=False, case=False)
+        df['model'].str.contains('huawei', na=False, case=False) |
+        df['model'].str.contains('Mediapad', na=False, case=False)
     )
 
     # look at its OUI
@@ -155,8 +157,8 @@ def mark_brand_xiaomi(didbName='didb', write_to_file=True):
         df['vendor'].str.contains('xiaomi', na=False, case=False)|
         df['user_agent'].str.contains('xiaomi', na=False, case=False) |
         # infer from model
-        df['model'].str.contains('Xiaomi', na=False, case=False) |
-        df['model'].str.contains('Mediapad', na=False, case=False)
+        df['model'].str.contains('Xiaomi', na=False, case=False) 
+        
     )
 
     # look at its OUI
