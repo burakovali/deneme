@@ -4,6 +4,7 @@ import pandas as pd
 import pickle
 import os
 import helper
+import re
     
 
 def mark_modelVersion_galaxy(didbName='didb', write_to_file=True):
@@ -35,6 +36,28 @@ def mark_modelVersion_galaxy(didbName='didb', write_to_file=True):
 
     if write_to_file:
         helper.update_didb(df, didbName)
+    return df
+
+def mark_modelVersion_appleUserAgent(didbName='didb', write_to_file=True):
+    print("apple model version start")
+    df = helper.get_df(didbName)
+    idx_list = []
+    version_list = []
+    for i,v in df[(df['user_agent'].str.contains('invitation-registration', na=False, case=False))].iterrows():
+        print("apple model version row", i)
+        myversion = None
+        if not pd.isna(v['user_agent']):
+            my_ua = v['user_agent']
+            s= my_ua[my_ua.find('['):my_ua.find(']')].split(',')[3]
+            myversion = re.match(r'([a-zA-Z]+)(\d+)', s).group(2) #iphone10 --> 10
+        if myversion is not None:
+            idx_list.append(i)
+            version_list.append(myversion)
+    for ix, vx in enumerate(idx_list):
+        df.loc[vx, 'modelVersion'] = version_list[ix]
+
+    if write_to_file:
+        helper.update_didb(df, didbName)   
     return df
 
 def mark_modelVersion_galaxyTab(didbName='didb', write_to_file=True):
@@ -146,6 +169,27 @@ def mark_modelVersion_xiaomiMi(didbName='didb', write_to_file=True):
                 (df['model'] == 'Xiaomi-Mi') & df['user_agent'].str.contains("MI 8") )
     df.loc[MI8_rule, 'modelVersion'] = '8'
 
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+def mark_modelVersion_xiaomiRedmiNote(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    idx_list = []
+    version_list = []
+    pattern = r"Redmi Note (\d+)\s+Pro"
+    for i,v in df[(df['model'] == 'Redmi Note')].iterrows():
+        myversion = None
+        if not pd.isna(v['user_agent']):
+            match = re.search(pattern, v['user_agent'])
+            if match:
+                myversion = match.group(1) + " pro"
+        if myversion is not None:
+            idx_list.append(i)
+            version_list.append(myversion)
+    for ix, vx in enumerate(idx_list):
+        df.loc[vx, 'modelVersion'] = version_list[ix]
+    
     if write_to_file:
         helper.update_didb(df, didbName)
     return df

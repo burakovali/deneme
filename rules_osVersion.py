@@ -95,6 +95,24 @@ def mark_macos_from_userAgent (didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df
 
+def mark_appleOS_version_userAgent(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    idx_list = []
+    version_list = []
+    for i,v in df[(df['user_agent'].str.contains('invitation-registration', na=False, case=False))].iterrows():
+        myversion = None
+        if not pd.isna(v['user_agent']):
+            my_ua = v['user_agent']
+            myversion= my_ua[my_ua.find('['):my_ua.find(']')].split(',')[1]
+        if myversion is not None:
+            idx_list.append(i)
+            version_list.append(myversion)
+    for ix, vx in enumerate(idx_list):
+        df.loc[vx, 'osVersion'] = version_list[ix]
+    if write_to_file:
+        helper.update_didb(df, didbName)   
+    return df
+
 def mark_android_version(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     idx_list = []

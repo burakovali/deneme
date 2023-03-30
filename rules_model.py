@@ -97,6 +97,7 @@ def mark_model_macBookPro(didbName='didb', write_to_file=True):
         df['vendor'].str.contains('macbook.pro', regex = True, na=False, case=False) |
         df['hostname'].str.contains('MBP', na=False, case=True) |
         df['user_agent'].str.contains('MBP', na=False, case=True) |
+        df['user_agent'].str.contains('macbookpro', na=False, case=True) |
         df['vendor'].str.contains('MBP', na=False, case=True) 
     )
 
@@ -251,7 +252,6 @@ def mark_model_huaweiP(didbName='didb', write_to_file=True):
 
 def mark_model_xiaomiMi(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
-
     xiaomiMi_rule = (
         # read from user agent, vendor or hostname
         (df['vendor'].str.contains('xiaomi.mi', regex = True, na=False, case=False)) | 
@@ -262,8 +262,19 @@ def mark_model_xiaomiMi(didbName='didb', write_to_file=True):
         (df['hostname'].str.contains('MI8', na=False, case=True)) |
         (df['user_agent'].str.contains('MI8', na=False, case=True))
     )
-    
     df.loc[xiaomiMi_rule, 'model'] = 'Xiaomi-Mi'
+    if write_to_file:
+        helper.update_didb(df, didbName)
+    return df
+
+def mark_model_xiaomiRedmiNote(didbName='didb', write_to_file=True):
+    df = helper.get_df(didbName)
+    # Redmi Note 8 Pro
+    xiaomiRedmi_rule = (
+        # read from user agent, vendor or hostname
+        (df['user_agent'].str.contains('redmi.note', regex=True, na=False, case=False))
+    )
+    df.loc[xiaomiRedmi_rule, 'model'] = 'Redmi Note'
     if write_to_file:
         helper.update_didb(df, didbName)
     return df
@@ -291,6 +302,7 @@ def mark_model_playStation(didbName='didb', write_to_file=True):
         # read from user agent, vendor or hostname
         (df['vendor'].str.contains('PS5', na=False, case=False)) | 
         (df['hostname'].str.contains('PS5', na=False, case=False)) |
+        (df['hostname'].str.contains('PlayStation 5', na=False, case=False)) |
         (df['user_agent'].str.contains('PS5', na=False, case=False))
     )
     

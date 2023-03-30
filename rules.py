@@ -19,11 +19,13 @@ model_rules =[rules_model.mark_model_iphone, rules_model.mark_model_ipad, rules_
                 rules_model.mark_model_galaxy, rules_model.mark_model_galaxyTab, rules_model.mark_model_hpPrinter, rules_model.mark_model_thinkpad,\
                 rules_model.mark_model_elitebook, rules_model.mark_model_huaweiP, rules_model.mark_model_xiaomiMi,\
                 rules_model.mark_model_mediapad, rules_model.mark_model_playStation, rules_model.mark_model_air4960,\
-                rules_model.mark_model_air4443, rules_model.mark_model_nintendo, rules_model.mark_model_oneday,rules_model.mark_model_quest]
+                rules_model.mark_model_air4443, rules_model.mark_model_nintendo, rules_model.mark_model_oneday,rules_model.mark_model_quest, \
+                rules_model.mark_model_xiaomiRedmiNote]
 
 modelVersion_rules = [rules_modelVersion.mark_modelVersion_galaxy, rules_modelVersion.mark_modelVersion_galaxyTab,
                       rules_modelVersion.mark_modelVersion_xiaomiMi, rules_modelVersion.mark_modelVersion_mediaPad,
-                      rules_modelVersion.mark_modelVersion_ThinkPad, rules_modelVersion.mark_xiaomi_version_oneday]
+                      rules_modelVersion.mark_modelVersion_ThinkPad, rules_modelVersion.mark_xiaomi_version_oneday,
+                      rules_modelVersion.mark_modelVersion_appleUserAgent, rules_modelVersion.mark_modelVersion_xiaomiRedmiNote]
 
 # os_rules = [rules_os.mark_os_mac, rules_os.mark_os_iphone, rules_os.mark_os_android, rules_os.mark_os_windows, rules_os.mark_os_linux]
 os_rules = [rules_os.mark_os_appleTV, rules_os.mark_os_iphone, rules_os.mark_os_mac, rules_os.mark_os_appleWatch,\
@@ -38,7 +40,8 @@ osVersion_rules = [rules_osVersion.mark_ios_version,
                     rules_osVersion.mark_modelVersion_appleOS_generic,
                     rules_osVersion.mark_android_version_oneday,
                     rules_osVersion.mark_macos_from_userAgent,
-                    rules_osVersion.mark_linux_version]
+                    rules_osVersion.mark_linux_version,
+                    rules_osVersion.mark_appleOS_version_userAgent]
 
 deviceType_rules = [rules_deviceType.mark_deviceType_mobile, rules_deviceType.mark_deviceType_pc, rules_deviceType.mark_deviceType_gamingConsole, rules_deviceType.mark_deviceType_tv, rules_deviceType.mark_deviceType_tablet, rules_deviceType.mark_deviceType_homeDevice, rules_deviceType.mark_deviceType_VR, rules_deviceType.mark_deviceType_watch, rules_deviceType.mark_deviceType_printer]
 
