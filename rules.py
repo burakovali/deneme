@@ -10,7 +10,7 @@ import rules_brand, rules_model, rules_modelVersion, rules_os, rules_osVersion, 
 brand_rules = [rules_brand.mark_brand_apple, rules_brand.mark_brand_samsung, rules_brand.mark_brand_hp,
                rules_brand.mark_brand_airties, rules_brand.mark_brand_huawei, rules_brand.mark_brand_xiaomi,
                rules_brand.mark_brand_lenovo, rules_brand.mark_brand_sony, rules_brand.mark_brand_nintendo,
-               rules_brand.mark_brand_asus,rules_brand.mark_brand_meta,
+               rules_brand.mark_brand_asus,rules_brand.mark_brand_meta, rules_brand.mark_brand_microsoft,
                rules_brand.mark_brand_oui] #This always has to be the last rule! Do not change this!
 
 # model_rules = [rules_model.mark_model_iphone, rules_model.mark_model_macBook, rules_model.mark_model_macBookPro, rules_model.mark_model_galaxy, rules_model.mark_model_galaxyTab, rules_model.mark_model_hpPrinter, rules_model.mark_model_nintendo]
@@ -18,14 +18,15 @@ model_rules =[rules_model.mark_model_iphone, rules_model.mark_model_ipad, rules_
                 rules_model.mark_model_macBook, rules_model.mark_model_macBookPro, rules_model.mark_model_appleWatch,\
                 rules_model.mark_model_galaxy, rules_model.mark_model_galaxyTab, rules_model.mark_model_hpPrinter, rules_model.mark_model_thinkpad,\
                 rules_model.mark_model_elitebook, rules_model.mark_model_huaweiP, rules_model.mark_model_xiaomiMi,\
-                rules_model.mark_model_mediapad, rules_model.mark_model_playStation, rules_model.mark_model_air4960,\
-                rules_model.mark_model_air4443, rules_model.mark_model_nintendo, rules_model.mark_model_oneday,rules_model.mark_model_quest, \
-                rules_model.mark_model_xiaomiRedmiNote]
+                rules_model.mark_model_mediapad, rules_model.mark_model_playStation, #rules_model.mark_model_air4960rules_model.mark_model_air4443, \
+                rules_model.mark_model_nintendo, rules_model.mark_model_oneday,rules_model.mark_model_quest, \
+                rules_model.mark_model_xiaomiRedmiNote, rules_model.mark_model_xbox, rules_model.mark_model_air0000, rules_model.mark_model_hp_switch]
 
 modelVersion_rules = [rules_modelVersion.mark_modelVersion_galaxy, rules_modelVersion.mark_modelVersion_galaxyTab,
                       rules_modelVersion.mark_modelVersion_xiaomiMi, rules_modelVersion.mark_modelVersion_mediaPad,
                       rules_modelVersion.mark_modelVersion_ThinkPad, rules_modelVersion.mark_xiaomi_version_oneday,
-                      rules_modelVersion.mark_modelVersion_appleUserAgent, rules_modelVersion.mark_modelVersion_xiaomiRedmiNote]
+                      rules_modelVersion.mark_modelVersion_appleUserAgent, rules_modelVersion.mark_modelVersion_xiaomiRedmiNote,
+                      rules_modelVersion.mark_model_xboxOne, rules_modelVersion.mark_modelVersion_huaweiP, rules_modelVersion.mark_modelVersion_eliteBook]
 
 # os_rules = [rules_os.mark_os_mac, rules_os.mark_os_iphone, rules_os.mark_os_android, rules_os.mark_os_windows, rules_os.mark_os_linux]
 os_rules = [rules_os.mark_os_appleTV, rules_os.mark_os_iphone, rules_os.mark_os_mac, rules_os.mark_os_appleWatch,\
@@ -43,7 +44,12 @@ osVersion_rules = [rules_osVersion.mark_ios_version,
                     rules_osVersion.mark_linux_version,
                     rules_osVersion.mark_appleOS_version_userAgent]
 
-deviceType_rules = [rules_deviceType.mark_deviceType_mobile, rules_deviceType.mark_deviceType_pc, rules_deviceType.mark_deviceType_gamingConsole, rules_deviceType.mark_deviceType_tv, rules_deviceType.mark_deviceType_tablet, rules_deviceType.mark_deviceType_homeDevice, rules_deviceType.mark_deviceType_VR, rules_deviceType.mark_deviceType_watch, rules_deviceType.mark_deviceType_printer]
+deviceType_rules = [rules_deviceType.mark_deviceType_mobile, rules_deviceType.mark_deviceType_pc,
+                    rules_deviceType.mark_deviceType_gamingConsole, rules_deviceType.mark_deviceType_tv,
+                    rules_deviceType.mark_deviceType_tablet, rules_deviceType.mark_deviceType_homeDevice,
+                    rules_deviceType.mark_deviceType_VR, rules_deviceType.mark_deviceType_watch,
+                    rules_deviceType.mark_deviceType_printer, rules_deviceType.mark_deviceType_switch,
+                    rules_deviceType.mark_deviceType_router]
 
 revisit_rules = [rules_combined.mark_model_mac, rules_combined.mark_deviceType_pc]
 
