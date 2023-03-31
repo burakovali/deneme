@@ -4,6 +4,7 @@ import pandas as pd
 import pickle
 import os
 import helper
+from datetime import datetime, timedelta
 
 # DHCP http://cloud-dpi.herokuapp.com/api/dhcp_processed_api/
 # DHCP unprocessed http://cloud-dpi.herokuapp.com/api/dhcp_api/
@@ -12,7 +13,14 @@ import helper
 # assoc req http://cloud-dpi.herokuapp.com/api/assoc_req/
 # curl --location --request GET 'http://cloud-dpi.herokuapp.com/api/dhcp_processed_api/' --header 'Authorization: Token 71770dd90492c70863464e214113679b3d8bb5ae'
 
-def get_data(type='ALL'):
+logFileName = 'logs'
+currentDirectory = os.getcwd()
+logFilePath = os.path.join(currentDirectory, logFileName)
+if not os.path.exists(logFilePath):
+    os.makedirs(logFilePath)
+
+def get_data(dateInfo, type='ALL'):
+    myheaders = {'Authorization': 'Token 71770dd90492c70863464e214113679b3d8bb5ae'}
     if type == 'ALL':
         print("Getting ALL data...")
         dhcp_proc = 'http://cloud-dpi.herokuapp.com/api/dhcp_processed_api/'
@@ -21,8 +29,47 @@ def get_data(type='ALL'):
         raw_user_agent = 'https://cloud-dpi.herokuapp.com/api/raw_user_agent/'
         assoc_req = 'http://cloud-dpi.herokuapp.com/api/assoc_req/'
         conntrack = 'https://cloud-dpi.herokuapp.com/api/conntrack_events'
-        # payload = { 'key' : 'val' }
-        myheaders = {'Authorization': 'Token 71770dd90492c70863464e214113679b3d8bb5ae'}
+
+    if dateInfo['use_timeRange']:
+        endDate = dateInfo['endDate']
+        if dateInfo['interval'] == None:
+            startDate = dateInfo['startDate']
+        else:
+            theEnd = datetime.strptime(dateInfo['endDate'], '%Y-%m-%d %H:%M:%S')
+            startDate = theEnd - timedelta(hours=6)
+            startDate = startDate.strftime("%Y-%m-%d %H:%M:%S")
+            if startDate < dateInfo['startDate']:
+                startDate = dateInfo['startDate']
+
+        payload = {'records_after': startDate, 'records_before': endDate}
+        print("Using dates between " + startDate + ' and ' + endDate)
+
+        myDate_after = startDate.replace(':','-')
+        myDate_after = myDate_after.replace(' ','-')
+        myDate_before = endDate.replace(':','-')
+        myDate_before = myDate_before.replace(' ','-')
+
+        fn_dhcp = os.path.join(logFilePath, 'dhcp_' + myDate_after + '_' + myDate_before + '.json')
+        fn_dhcp_proc = os.path.join(logFilePath, 'dhcp_proc_' + myDate_after + '_' + myDate_before + '.json')
+        fn_user_agent = os.path.join(logFilePath, 'user_agent_' + myDate_after + '_' + myDate_before + '.json')
+        fn_raw_user_agent = os.path.join(logFilePath, 'raw_user_agent_' + myDate_after + '_' + myDate_before + '.json')
+        fn_assoc_req = os.path.join(logFilePath, 'assoc_req_' + myDate_after + '_' + myDate_before + '.json')
+        fn_conntrack = os.path.join(logFilePath, 'conntrack_' + myDate_after + '_' + myDate_before + '.json')
+
+        res_dhcp_proc = requests.get(url=dhcp_proc, headers=myheaders, params=payload)
+        res_dhcp = requests.get(url=dhcp, headers=myheaders, params=payload)
+        res_user_agent = requests.get(url=user_agent, headers=myheaders, params=payload)
+        res_raw_user_agent = requests.get(url=raw_user_agent, headers=myheaders, params=payload)
+        res_assoc_req = requests.get(url=assoc_req, headers=myheaders, params=payload)
+        res_conntrack = requests.get(url=conntrack, headers=myheaders, params=payload)
+    else:
+        print("Getting data without date filter... ")
+        fn_dhcp = os.path.join(logFilePath, 'dhcp.json')
+        fn_dhcp_proc = os.path.join(logFilePath, 'dhcp_proc.json')
+        fn_user_agent = os.path.join(logFilePath, 'user_agent.json')
+        fn_raw_user_agent = os.path.join(logFilePath, 'raw_user_agent.json')
+        fn_assoc_req = os.path.join(logFilePath, 'assoc_req.json')
+        fn_conntrack = os.path.join(logFilePath, 'conntrack.json')
 
         res_dhcp_proc = requests.get(url=dhcp_proc, headers=myheaders)
         res_dhcp = requests.get(url=dhcp, headers=myheaders)
@@ -31,18 +78,47 @@ def get_data(type='ALL'):
         res_assoc_req = requests.get(url=assoc_req, headers=myheaders)
         res_conntrack = requests.get(url=conntrack, headers=myheaders)
 
-        with open("dhcp.json", "w") as f:
-            json.dump(res_dhcp.json(), f)
-        with open("dhcp_proc.json", "w") as f:
-            json.dump(res_dhcp_proc.json(), f)
-        with open("user_agent.json", "w") as f:
-            json.dump(res_user_agent.json(), f)
-        with open("raw_user_agent.json", "w") as f:
-            json.dump(res_raw_user_agent.json(), f)
-        with open("assoc_req.json", "w") as f:
-            json.dump(res_assoc_req.json(), f)
-        with open("conntrack.json", "w") as f:
-            json.dump(res_conntrack.json(), f)
+    with open(fn_dhcp, "w") as f:
+        json.dump(res_dhcp.json(), f)
+
+    with open(fn_dhcp_proc, "w") as f:
+        json.dump(res_dhcp_proc.json(), f)
+
+    with open(fn_user_agent, "w") as f:
+        json.dump(res_user_agent.json(), f)
+
+    with open(fn_assoc_req, "w") as f:
+        json.dump(res_assoc_req.json(), f)
+
+    with open(fn_conntrack, "w") as f:
+        json.dump(res_conntrack.json(), f)
+
+    with open(fn_raw_user_agent, "w") as f:
+        json.dump(res_raw_user_agent.json(), f)
+
+def get_data_intervals_recursive(dateInfo, type='ALL'):
+    endDate = dateInfo['endDate']
+    if dateInfo['interval'] == None:
+        print("Recursion works with interval. No interval is entered. Exiting...")
+        exit()
+    else:
+        print("Running recursive get_data..." + str(dateInfo))
+        endDateList = []
+        endDateList.append(endDate)
+        theEnd = datetime.strptime(endDate, '%Y-%m-%d %H:%M:%S')
+        next_endDate = theEnd - timedelta(hours=6)
+        next_endDate = next_endDate.strftime("%Y-%m-%d %H:%M:%S")
+        endDateList.append(next_endDate)
+        while next_endDate > dateInfo['startDate']:
+            theEnd = datetime.strptime(next_endDate, '%Y-%m-%d %H:%M:%S')
+            next_endDate = theEnd - timedelta(hours=6)
+            next_endDate = next_endDate.strftime("%Y-%m-%d %H:%M:%S")
+            endDateList.append(next_endDate)
+        for i,v in enumerate(endDateList):
+            thisdateInfo = dateInfo
+            thisdateInfo['endDate'] = v
+            if thisdateInfo['endDate'] > thisdateInfo['startDate']:
+                get_data(thisdateInfo, type='ALL')
 
 def get_ouiList():
     df = pd.read_csv('oui.csv')

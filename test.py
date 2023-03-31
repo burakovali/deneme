@@ -11,12 +11,18 @@ import analytics, query
 didbName = 'didb'
 ouiName = 'oui'
 # 1 #
-# fetcher.get_data(type='ALL')
+myDate_after = '2023-03-22 14:00:00'
+myDate_before = '2023-03-23 13:00:00'
+dateInfo = {'use_timeRange': True, 'startDate': myDate_after, 'endDate': myDate_before, 'interval': '6h'}
+
+# fetcher.get_data(dateInfo, type='ALL')
+fetcher.get_data_intervals_recursive(dateInfo, type='ALL')
+
 # 2 #
 # df = generate.create_didb()
 #df_oui = generate.get_ouiList()
 # 3 #
-df = generate.populate_didb(didbName, 'ALL', True)
+# df = generate.populate_didb(didbName, 'ALL', True)
 
 # create os-parameters lists for known devices
 """ df_param = generate.os_params_list(didbName, False)
