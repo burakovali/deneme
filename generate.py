@@ -4,13 +4,17 @@ import pandas as pd
 import pickle
 import os
 import rules
-import helper
+import helper, config
 import assoc_parser, raw_user_agent_parse
 from user_agents import parse
+import fetcher
+
+if not os.path.exists(config.didbFilePath):
+    os.makedirs(config.didbFilePath)
 
 def populate_didb(didbName, rule='ALL', write_to_csv=True):
-
-    helper.delete_didb(didbName) # Clear the previously stored processed_didb
+    didbFile = os.path.join(config.didbFilePath, didbName)
+    helper.delete_didb(didbFile) # Clear the previously stored processed_didb
     print("Running rules...")
     if rule == 'ALL':
         for rule in rules.all_rules:
@@ -39,28 +43,34 @@ def populate_didb(didbName, rule='ALL', write_to_csv=True):
         print('RULE UNDEFINED!')
         exit()
             
-    df = helper.get_df(didbName)
-    df_merged = merge_didb(didbName, True)
+    df = helper.get_df(didbFile)
+    df_merged = merge_didb(didbFile, True)
     if write_to_csv:
-        helper.write_df_to_csv(df, 'processed_didb.csv')
-        helper.write_df_to_csv(df_merged, 'merged_didb.csv')
+        processed_csv = os.path.join(config.didbFilePath, 'processed_didb.csv')
+        merged_csv = os.path.join(config.didbFilePath, 'merged_didb.csv')
+        helper.write_df_to_csv(df, processed_csv)
+        helper.write_df_to_csv(df_merged, merged_csv)
     return df, df_merged
 
 def create_didb(didbName='didb', write_to_file=True):
 
-    f_ua = open('user_agent.json')
+    user_agent_path = os.path.join(config.logFilePath, 'user_agent.json')
+    f_ua = open(user_agent_path)
     print("Loading user_agent.json...")
     data_ua = json.load(f_ua)
 
-    f_dhcp_proc = open('dhcp_proc.json')
+    dhcp_proc_path = os.path.join(config.logFilePath, 'dhcp_proc.json')
+    f_dhcp_proc = open(dhcp_proc_path)
     print("Loading dhcp_proc.json...")
     data_dhcp_proc = json.load(f_dhcp_proc)
 
-    f_assoc_req = open('assoc_req.json')
+    assoc_req_path = os.path.join(config.logFilePath, 'assoc_req.json')
+    f_assoc_req = open(assoc_req_path)
     print("Loading assoc_req.json...")
     data_assoc_req =  assoc_parser.parse_assoc_df(json.load(f_assoc_req))
 
-    f_rua = open('raw_user_agent.json')
+    raw_user_agent_path = os.path.join(config.logFilePath, 'raw_user_agent.json')
+    f_rua = open(raw_user_agent_path)
     print("Loading raw_user_agent.json...")
     data_rua = raw_user_agent_parse.parse_user_agent(json.load(f_rua))
 
@@ -161,7 +171,8 @@ def create_didb(didbName='didb', write_to_file=True):
                     df_devices = df_devices.append(row, ignore_index=True)
 
     if write_to_file:
-        helper.write_pickle(df_devices, didbName)
+        didbFile = os.path.join(config.didbFilePath, didbName)
+        helper.write_pickle(df_devices, didbFile)
 
     return df_devices
 
@@ -279,14 +290,14 @@ def merge_didb(didbName='didb', write_to_file=True):
                 modelVersion = ''
 
         try:
-            os = list(df[df['mac'] == mac]['os'].unique())
+            oss = list(df[df['mac'] == mac]['os'].unique())
         except:
-            os = None
-        if os is not None:
-            os = [x for x in os if str(x) != 'nan']
-            os = ', '.join(os)
-            if len(os) == 0:
-                os = ''
+            oss = None
+        if oss is not None:
+            oss = [x for x in oss if str(x) != 'nan']
+            oss = ', '.join(oss)
+            if len(oss) == 0:
+                oss = ''
 
         try:
             osVersion = list(df[df['mac'] == mac]['osVersion'].unique())
@@ -353,12 +364,13 @@ def merge_didb(didbName='didb', write_to_file=True):
             else:
                 hostName = ', '.join(hostName)
 
-        row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': os, 'osVersion': osVersion, 'deviceType': deviceType, 'timestamp': latest_timestamp, 'params': params, 'isWiFi': iswifi, 'isRandom': isRandom, 'hostname': hostName}
+        row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': oss, 'osVersion': osVersion, 'deviceType': deviceType, 'timestamp': latest_timestamp, 'params': params, 'isWiFi': iswifi, 'isRandom': isRandom, 'hostname': hostName}
 
         merged_df = merged_df.append(row, ignore_index=True)
 
         if write_to_file:
-            helper.write_pickle(merged_df, 'didb_merged')
+            didbFile = os.path.join(config.didbFilePath, 'didb_merged')
+            helper.write_pickle(merged_df, didbFile)
     return merged_df
 
 def remove_nan (myList):

@@ -5,7 +5,7 @@ import pickle
 import os
 import httpagentparser
 import re
-import fetcher
+import fetcher, config
 
     
 def is_global(mac):
@@ -84,28 +84,32 @@ def read_pickle(fileName):
     return data
 
 def get_df(didbName):
-    didb_processed = str(didbName) + '_processed'
+    didbFile = os.path.join(config.didbFilePath, didbName)
+    didb_processed = str(didbFile) + '_processed'
     if os.path.exists(didb_processed):
         df = read_pickle(didb_processed)
     else:
-        df = read_pickle(didbName)
+        df = read_pickle(didbFile)
     return df
 
 def get_merged_df(didbName):
-    didb_processed = str(didbName) + '_merged'
+    didbFile = os.path.join(config.didbFilePath, didbName)
+    didb_processed = str(didbFile) + '_merged'
     if os.path.exists(didb_processed):
         df = read_pickle(didb_processed)
     else:
-        df = read_pickle(didbName)
+        df = read_pickle(didbFile)
     return df
 
 def update_didb(df, didbName):
-    didb_processed = str(didbName) + '_processed'
+    didbFile = os.path.join(config.didbFilePath, didbName)
+    didb_processed = str(didbFile) + '_processed'
     write_pickle(df, didb_processed)
     return df
 
 def delete_didb(didbName):
-    didb_processed = str(didbName) + '_processed'
+    didbFile = os.path.join(config.didbFilePath, didbName)
+    didb_processed = str(didbFile) + '_processed'
     if os.path.exists(didb_processed):
         print("Deleting previous processed didb...")
         os.remove(didb_processed)
@@ -144,7 +148,8 @@ def check_oui(brandName, didbName='didb'):
     else:
         df_oui = fetcher.get_ouiList()
 
-    df = read_pickle(didbName)
+    didbFile = os.path.join(config.didbFilePath, didbName)
+    df = read_pickle(didbFile)
     df['mac_oui'] = df['mac'].apply(lambda x: x[:6] if is_global(x[:6]) else None)
     mask = df['mac_oui'].notnull()
     df.loc[~mask, 'mac_oui'] = ''

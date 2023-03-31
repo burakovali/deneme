@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import pickle
 import os
-import helper
+import helper, config
 from datetime import datetime, timedelta
 
 # DHCP http://cloud-dpi.herokuapp.com/api/dhcp_processed_api/
@@ -13,11 +13,8 @@ from datetime import datetime, timedelta
 # assoc req http://cloud-dpi.herokuapp.com/api/assoc_req/
 # curl --location --request GET 'http://cloud-dpi.herokuapp.com/api/dhcp_processed_api/' --header 'Authorization: Token 71770dd90492c70863464e214113679b3d8bb5ae'
 
-logFileName = 'logs'
-currentDirectory = os.getcwd()
-logFilePath = os.path.join(currentDirectory, logFileName)
-if not os.path.exists(logFilePath):
-    os.makedirs(logFilePath)
+if not os.path.exists(config.logFilePath):
+    os.makedirs(config.logFilePath)
 
 def get_data(dateInfo, type='ALL'):
     myheaders = {'Authorization': 'Token 71770dd90492c70863464e214113679b3d8bb5ae'}
@@ -49,12 +46,12 @@ def get_data(dateInfo, type='ALL'):
         myDate_before = endDate.replace(':','-')
         myDate_before = myDate_before.replace(' ','-')
 
-        fn_dhcp = os.path.join(logFilePath, 'dhcp_' + myDate_after + '_' + myDate_before + '.json')
-        fn_dhcp_proc = os.path.join(logFilePath, 'dhcp_proc_' + myDate_after + '_' + myDate_before + '.json')
-        fn_user_agent = os.path.join(logFilePath, 'user_agent_' + myDate_after + '_' + myDate_before + '.json')
-        fn_raw_user_agent = os.path.join(logFilePath, 'raw_user_agent_' + myDate_after + '_' + myDate_before + '.json')
-        fn_assoc_req = os.path.join(logFilePath, 'assoc_req_' + myDate_after + '_' + myDate_before + '.json')
-        fn_conntrack = os.path.join(logFilePath, 'conntrack_' + myDate_after + '_' + myDate_before + '.json')
+        fn_dhcp = os.path.join(config.logFilePath, 'dhcp_' + myDate_after + '_' + myDate_before + '.json')
+        fn_dhcp_proc = os.path.join(config.logFilePath, 'dhcp_proc_' + myDate_after + '_' + myDate_before + '.json')
+        fn_user_agent = os.path.join(config.logFilePath, 'user_agent_' + myDate_after + '_' + myDate_before + '.json')
+        fn_raw_user_agent = os.path.join(config.logFilePath, 'raw_user_agent_' + myDate_after + '_' + myDate_before + '.json')
+        fn_assoc_req = os.path.join(config.logFilePath, 'assoc_req_' + myDate_after + '_' + myDate_before + '.json')
+        fn_conntrack = os.path.join(config.logFilePath, 'conntrack_' + myDate_after + '_' + myDate_before + '.json')
 
         res_dhcp_proc = requests.get(url=dhcp_proc, headers=myheaders, params=payload)
         res_dhcp = requests.get(url=dhcp, headers=myheaders, params=payload)
@@ -64,12 +61,12 @@ def get_data(dateInfo, type='ALL'):
         res_conntrack = requests.get(url=conntrack, headers=myheaders, params=payload)
     else:
         print("Getting data without date filter... ")
-        fn_dhcp = os.path.join(logFilePath, 'dhcp.json')
-        fn_dhcp_proc = os.path.join(logFilePath, 'dhcp_proc.json')
-        fn_user_agent = os.path.join(logFilePath, 'user_agent.json')
-        fn_raw_user_agent = os.path.join(logFilePath, 'raw_user_agent.json')
-        fn_assoc_req = os.path.join(logFilePath, 'assoc_req.json')
-        fn_conntrack = os.path.join(logFilePath, 'conntrack.json')
+        fn_dhcp = os.path.join(config.logFilePath, 'dhcp.json')
+        fn_dhcp_proc = os.path.join(config.logFilePath, 'dhcp_proc.json')
+        fn_user_agent = os.path.join(config.logFilePath, 'user_agent.json')
+        fn_raw_user_agent = os.path.join(config.logFilePath, 'raw_user_agent.json')
+        fn_assoc_req = os.path.join(config.logFilePath, 'assoc_req.json')
+        fn_conntrack = os.path.join(config.logFilePath, 'conntrack.json')
 
         res_dhcp_proc = requests.get(url=dhcp_proc, headers=myheaders)
         res_dhcp = requests.get(url=dhcp, headers=myheaders)
@@ -78,23 +75,48 @@ def get_data(dateInfo, type='ALL'):
         res_assoc_req = requests.get(url=assoc_req, headers=myheaders)
         res_conntrack = requests.get(url=conntrack, headers=myheaders)
 
-    with open(fn_dhcp, "w") as f:
-        json.dump(res_dhcp.json(), f)
+    print("res_dhcp status code: " + str(res_dhcp.status_code))
+    print("res_dhcp_proc status code: " + str(res_dhcp_proc.status_code))
+    print("res_user_agent status code: " + str(res_user_agent.status_code))
+    print("assoc_req status code: " + str(res_assoc_req.status_code))
+    print("res_dhcp status code: " + str(res_conntrack.status_code))
+    print("res_dhcp status code: " + str(res_dhcp.status_code))
 
-    with open(fn_dhcp_proc, "w") as f:
-        json.dump(res_dhcp_proc.json(), f)
+    if res_dhcp.status_code == 200:
+        with open(fn_dhcp, "w") as f:
+            json.dump(res_dhcp.json(), f)
+    else:
+        print("Could not load res_dhcp!")
 
-    with open(fn_user_agent, "w") as f:
-        json.dump(res_user_agent.json(), f)
+    if res_dhcp_proc.status_code == 200:
+        with open(fn_dhcp_proc, "w") as f:
+            json.dump(res_dhcp_proc.json(), f)
+    else:
+        print("Could not load res_dhcp_proc!")
 
-    with open(fn_assoc_req, "w") as f:
-        json.dump(res_assoc_req.json(), f)
+    if res_user_agent.status_code == 200:
+        with open(fn_user_agent, "w") as f:
+            json.dump(res_user_agent.json(), f)
+    else:
+        print("Could not load res_user_agent!")
 
-    with open(fn_conntrack, "w") as f:
-        json.dump(res_conntrack.json(), f)
+    if res_assoc_req.status_code == 200:
+        with open(fn_assoc_req, "w") as f:
+            json.dump(res_assoc_req.json(), f)
+    else:
+        print("Could not load res_assoc_req!")
 
-    with open(fn_raw_user_agent, "w") as f:
-        json.dump(res_raw_user_agent.json(), f)
+    if res_conntrack.status_code == 200:
+        with open(fn_conntrack, "w") as f:
+            json.dump(res_conntrack.json(), f)
+    else:
+        print("Could not load res_conntrack!")
+
+    if res_raw_user_agent.status_code == 200:
+        with open(fn_raw_user_agent, "w") as f:
+            json.dump(res_raw_user_agent.json(), f)
+    else:
+        print("Could not load res_raw_user_agent!")
 
 def get_data_intervals_recursive(dateInfo, type='ALL'):
     endDate = dateInfo['endDate']

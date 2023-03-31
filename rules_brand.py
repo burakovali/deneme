@@ -303,7 +303,7 @@ def mark_brand_oui(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
     df_oui = helper.read_pickle('ouiList')
 
-    #df['brand'] = df.apply(lambda row: (df_oui.loc[df_oui['Assignment'].str.contains(row['mac'][:6]), 'Organization Name'].iloc[0] if not df_oui.loc[df_oui['Assignment'].str.contains(row['mac'][:6]), 'Organization Name'].empty and pd.isna(row['brand']) else row['brand']) if helper.is_global(row['mac'][:6]) else row['brand'], axis=1)
+    df['brand'] = df.apply(lambda row: (df_oui.loc[df_oui['Assignment'].str.contains(row['mac'][:6]), 'Organization Name'].iloc[0] if not df_oui.loc[df_oui['Assignment'].str.contains(row['mac'][:6]), 'Organization Name'].empty and pd.isna(row['brand']) else row['brand']) if helper.is_global(row['mac'][:6]) else row['brand'], axis=1)
 
     if write_to_file:
         helper.update_didb(df, didbName)

@@ -14,14 +14,13 @@ ouiName = 'oui'
 # 1 #
 myDate_after = '2023-03-22 14:00:00'
 myDate_before = '2023-03-23 13:00:00'
-dateInfo = {'use_timeRange': True, 'startDate': myDate_after, 'endDate': myDate_before, 'interval': '6h'}
+dateInfo = {'use_timeRange': False, 'startDate': myDate_after, 'endDate': myDate_before, 'interval': '6h'}
 
 # fetcher.get_data(dateInfo, type='ALL')
-fetcher.get_data_intervals_recursive(dateInfo, type='ALL')
+# fetcher.get_data_intervals_recursive(dateInfo, type='ALL')
 
 # 2 #
-#df = generate.create_didb()
-df = helper.read_pickle(didbName)
+# df = generate.create_didb()
 # 3 #
 # df = generate.populate_didb(didbName, 'ALL', True)
 
@@ -30,15 +29,15 @@ df = helper.read_pickle(didbName)
 helper.write_df_to_csv(df_param, 'os_param_list.csv') """
 
 # 4 #
-df = helper.get_df(didbName)
-helper.write_df_to_csv(df, 'processed_didb.csv')
+# df = helper.get_df(didbName)
+# helper.write_df_to_csv(df, 'processed_didb.csv')
 
 # 5 #
 #df = generate.merge_didb(didbName, True)
 #helper.write_df_to_csv(df, 'merged_didb.csv')
 
 # 6 #
-#analytics.analyze_didb(didbName, False)
+analytics.analyze_didb(didbName, False)
 
 # 7 #
 #analytics.count_missing_values(didbName, False)
