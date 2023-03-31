@@ -263,6 +263,7 @@ def merge_didb(didbName='didb', write_to_file=True):
             model = None
         if model is not None:
             model = [x for x in model if str(x) != 'nan']
+            model = [x for x in model if x is not None]
             model = ', '.join(model)
             if len(model) == 0:
                 model = ''

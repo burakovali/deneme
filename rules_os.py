@@ -5,16 +5,17 @@ import pickle
 import os
 import helper
 
-params_android = ['1,3,6,15,26,28,51,58,59,43', '1,3,6,15,26,28,51,58,59,43,114,108']
-params_ios = ['1,121,3,6,15,108,114,119,252', '1,121,3,6,15,114,119,252']
-params_macos = ['1,121,3,6,15,108,114,119,252,95,44,46', '1,121,3,6,15,114,119,252,95,44,46', '1,121,3,6,15,119,252,95,44,46']
-params_unix = ['1,3,6,12,15,28,42,212', '1,3,6,12,15,28,42']
-params_windows = ['1,3,6,15,31,33,43,44,46,47,119,121,249,252']
-params_linux = ['1,2,6,12,15,26,28,121,3,33,40,41,42,119,249,252,17', '1,28,2,3,15,6,119,12,44,47,26,121,42,249,33,252']
+params_android = ['1-3-6-15-26-28-51-58-59-43', '1-3-6-15-26-28-51-58-59-43-114-108']
+params_ios = ['1-121-3-6-15-108-114-119-252', '1-121-3-6-15-114-119-252']
+params_ipad = ['1-121-3-6-15-114-119-252']
+params_macos = ['1-121-3-6-15-108-114-119-252-95-44-46', '1-121-3-6-15-114-119-252-95-44-46', '1-121-3-6-15-119-252-95-44-46']
+params_unix = ['1-3-6-12-15-28-42-212', '1-3-6-12-15-28-42']
+params_windows = ['1-3-6-15-31-33-43-44-46-47-119-121-249-252']
+params_linux = ['1-2-6-12-15-26-28-121-3-33-40-41-42-119-249-252-17', '1-28-2-3-15-6-119-12-44-47-26-121-42-249-33-252']
 # TODO: os rules for these following:
-params_linux_debian = ['1,28,2,3,15,6,12']
-params_embedded = ['1,3,6,28']
-params_appletv = ['1,3,6,15,67,43,60']
+params_linux_debian = ['1-28-2-3-15-6-12']
+params_embedded = ['1-3-6-28']
+params_appletv = ['1-3-6-15-67-43-60']
 
 def mark_os_appleTV(didbName='didb', write_to_file=True):
     df = helper.get_df(didbName)
@@ -153,6 +154,8 @@ def mark_os_ipad(didbName='didb', write_to_file=True):
         apple_tablet_rule
     )
     
+    df.loc[df['params'].isin(params_ipad), 'os'] = 'iPadOS' 
+
     df.loc[ipadOS_rule, 'os'] = 'iPadOS'
     if write_to_file:
         helper.update_didb(df, didbName)

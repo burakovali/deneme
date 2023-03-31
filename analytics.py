@@ -114,4 +114,4 @@ def count_missing_values(didbName='didb', write_to_file=True):
     print('All:' + str(all) + ": " + str(all - assoc_req_spatial_stream)+" have assoc request -> "+str(round(100*(all - assoc_req_spatial_stream)/all,2)) + '%')
     print('All:' + str(all) + ": " + str(all - assoc_req_vendors)+" have assoc request vendor -> "+str(round(100*(all - assoc_req_vendors)/all,2)) + '%')
     print('All:' + str(all) + ": " + str(all - wfa_device_name)+" have wfa device name -> "+str(round(100*(all - wfa_device_name)/all,2)) + '%')
-    print('All:' + str(all) + ": " + str(all - hostname_useragent)+ " have both hostname and user_agent -> "+  str(round(100*(all - hostname_useragent)/all,2)) + '%')
+    print('All:' + str(all) + ": " + str(all - hostname - user_agent + hostname_useragent)+ " have both hostname and user_agent -> "+  str(round(100*(all - hostname_useragent)/all,2)) + '%')
