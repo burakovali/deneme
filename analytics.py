@@ -115,3 +115,48 @@ def count_missing_values(didbName='didb', write_to_file=True):
     print('All:' + str(all) + ": " + str(all - assoc_req_vendors)+" have assoc request vendor -> "+str(round(100*(all - assoc_req_vendors)/all,2)) + '%')
     print('All:' + str(all) + ": " + str(all - wfa_device_name)+" have wfa device name -> "+str(round(100*(all - wfa_device_name)/all,2)) + '%')
     print('All:' + str(all) + ": " + str(all - hostname - user_agent + hostname_useragent)+ " have both hostname and user_agent -> "+  str(round(100*(all - hostname_useragent)/all,2)) + '%')
+
+def create_confidence_report(didbName='didb', write_to_file=True):
+        df = helper.get_merged_df(didbName)
+        high_cscore_dtype=['Mobile','VR Headset','Printer','Tablet','Watch','Gaming Console']
+        high_cscore_ostype=['Windows','macOS']
+        df['confidence']=''
+        for index,row in df.iterrows():
+            non_empty_counter=0
+            cscore_flag=False
+            score=0
+            if row['deviceType'] in high_cscore_dtype:
+                score=score+75
+                cscore_flag=True
+            else:
+                score=score+35
+            if row['os'] !='':
+                    if  row['os'] in high_cscore_ostype:
+                        score=score+45
+                        cscore_flag=True
+                    else:
+                         score=score+5
+                         
+            if row['brand'] !='':
+                    non_empty_counter=non_empty_counter+1
+            if row['model'] !='':
+                    non_empty_counter=non_empty_counter+1
+            if row['modelVersion'] !='':
+                    non_empty_counter=non_empty_counter+1
+            if row['osVersion'] !='':
+                    non_empty_counter=non_empty_counter+1
+
+            
+            if cscore_flag:
+                score=score+(non_empty_counter*5)
+            else:
+                score=score+(non_empty_counter*15)
+        
+            df.at[index,'confidence']=score
+        if write_to_file:
+            helper.write_df_to_csv(df, 'confidence_score.csv')
+
+ 
+            
+
+
