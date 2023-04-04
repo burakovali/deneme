@@ -32,8 +32,9 @@ def get_data(dateInfo, type='ALL'):
         if dateInfo['interval'] == None:
             startDate = dateInfo['startDate']
         else:
+            interval = int(dateInfo['interval'])
             theEnd = datetime.strptime(dateInfo['endDate'], '%Y-%m-%d %H:%M:%S')
-            startDate = theEnd - timedelta(hours=6)
+            startDate = theEnd - timedelta(hours = interval)
             startDate = startDate.strftime("%Y-%m-%d %H:%M:%S")
             if startDate < dateInfo['startDate']:
                 startDate = dateInfo['startDate']
@@ -124,16 +125,18 @@ def get_data_intervals_recursive(dateInfo, type='ALL'):
         print("Recursion works with interval. No interval is entered. Exiting...")
         exit()
     else:
+        interval = int(dateInfo['interval'])
+        print("Interval: " + str(interval))
         print("Running recursive get_data..." + str(dateInfo))
         endDateList = []
         endDateList.append(endDate)
         theEnd = datetime.strptime(endDate, '%Y-%m-%d %H:%M:%S')
-        next_endDate = theEnd - timedelta(hours=6)
+        next_endDate = theEnd - timedelta(hours = interval)
         next_endDate = next_endDate.strftime("%Y-%m-%d %H:%M:%S")
         endDateList.append(next_endDate)
         while next_endDate > dateInfo['startDate']:
             theEnd = datetime.strptime(next_endDate, '%Y-%m-%d %H:%M:%S')
-            next_endDate = theEnd - timedelta(hours=6)
+            next_endDate = theEnd - timedelta(hours = interval)
             next_endDate = next_endDate.strftime("%Y-%m-%d %H:%M:%S")
             endDateList.append(next_endDate)
         for i,v in enumerate(endDateList):

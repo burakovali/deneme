@@ -4,10 +4,11 @@ import pandas as pd
 import pickle
 import os
 import helper
+import config
 
 
-def mark_modelVersion_appleOS_generic(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_modelVersion_appleOS_generic(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['brand'] == 'Apple')].iterrows():
@@ -35,11 +36,11 @@ def mark_modelVersion_appleOS_generic(didbName='didb', write_to_file=True):
         df.loc[vx, 'osVersion'] = version_list[ix]
 
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_ios_version(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_ios_version(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[df['os'] == 'iOS'].iterrows():
@@ -60,11 +61,11 @@ def mark_ios_version(didbName='didb', write_to_file=True):
     for ix, vx in enumerate(idx_list):
         df.loc[vx, 'osVersion'] = version_list[ix]
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_macos_version(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_macos_version(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[df['os'] == 'macOS'].iterrows():
@@ -85,18 +86,18 @@ def mark_macos_version(didbName='didb', write_to_file=True):
     for ix, vx in enumerate(idx_list):
         df.loc[vx, 'osVersion'] = version_list[ix]
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_macos_from_userAgent (didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_macos_from_userAgent (write_to_file=True):
+    df = helper.get_df(config._didbName_)
     df.loc[df['model'].str.contains('Darwin/22.2.0', na=False, case = False), 'osVersion'] = '12.2'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_appleOS_version_userAgent(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_appleOS_version_userAgent(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['user_agent'].str.contains('invitation-registration', na=False, case=False))].iterrows():
@@ -110,11 +111,11 @@ def mark_appleOS_version_userAgent(didbName='didb', write_to_file=True):
     for ix, vx in enumerate(idx_list):
         df.loc[vx, 'osVersion'] = version_list[ix]
     if write_to_file:
-        helper.update_didb(df, didbName)   
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_android_version(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_android_version(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[df['os'] == 'Android'].iterrows():
@@ -135,11 +136,11 @@ def mark_android_version(didbName='didb', write_to_file=True):
     for ix, vx in enumerate(idx_list):
         df.loc[vx, 'osVersion'] = version_list[ix].split(";")[0]
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_android_version_oneday(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_android_version_oneday(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[df['os'] == 'Android'].iterrows():
@@ -160,12 +161,12 @@ def mark_android_version_oneday(didbName='didb', write_to_file=True):
     for ix, vx in enumerate(idx_list):
         df.loc[vx, 'osVersion'] = version_list[ix].split(";")[0]
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-def mark_windows_version(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_windows_version(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     for i,v in df[df['os'] == 'Windows'].iterrows():
         if not pd.isna(v["user_agent"]):
@@ -176,18 +177,18 @@ def mark_windows_version(didbName='didb', write_to_file=True):
                 v["user_agent"].split('/')[1]
                 df.loc[i, 'osVersion'] = v["user_agent"].split('/')[1]
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
 
-def mark_linux_version(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_linux_version(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     for i,v in df[df['os'] == 'Linux'].iterrows():
         if not pd.isna(v["user_agent"]):
             if 'Linux x86_64' in v["user_agent"]:
                 df.loc[i, 'osVersion'] = '64 bit'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df

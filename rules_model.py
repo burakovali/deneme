@@ -5,6 +5,7 @@ import pickle
 import os
 import helper
 import re
+import config
 
 params_iphone = ['1,121,3,6,15,108,114,119,252']
 params_macbook = ['1,121,3,6,15,114,119,252,95,44,46']
@@ -12,8 +13,8 @@ params_macbookPro = ['1,121,3,6,15,108,114,119,252,95,44,46', '1,121,3,6,15,119,
 params_printer = ['1,121,33,3,6,12,15,28,44,51,54,58,59,81,119,252', '6,3,1,15,12,44,81,69,42,43,18,66,67,150,7']
 params_ps5 = ['1,3,15,6']
 
-def mark_model_iphone(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_iphone(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     # iphone_rule = (df['brand'] == 'Apple') & ((df['hostname'].str.contains('iphone', na=False, case=False)) | (df['user_agent'].str.contains('iphone', na=False, case=False)))
     
@@ -31,11 +32,11 @@ def mark_model_iphone(didbName='didb', write_to_file=True):
     df.loc[df['params'].isin(params_iphone), 'model'] = 'iPhone'
 
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_ipad(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_ipad(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     #iphone_rule = (df['brand'] == 'Apple') & ((df['hostname'].str.contains('iphone', na=False, case=False)) | (df['user_agent'].str.contains('iphone', na=False, case=False)))
     ipad_rule = (
@@ -47,11 +48,11 @@ def mark_model_ipad(didbName='didb', write_to_file=True):
     
     df.loc[ipad_rule, 'model'] = 'iPad'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_ipadPro(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_ipadPro(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     #iphone_rule = (df['brand'] == 'Apple') & ((df['hostname'].str.contains('iphone', na=False, case=False)) | (df['user_agent'].str.contains('iphone', na=False, case=False)))
     ipadPro_rule = (
@@ -63,11 +64,11 @@ def mark_model_ipadPro(didbName='didb', write_to_file=True):
     
     df.loc[ipadPro_rule, 'model'] = 'iPadPro'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_macBook(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_macBook(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     # macBook_rule = ((df['brand'] == 'Apple') & ((df['hostname'].str.contains('macBook', na=False, case=False)) | (df['user_agent'].str.contains('macbook', na=False, case=False)) | (df['hostname'].str.contains('MBP', na=False, case=True))))
     
@@ -82,12 +83,12 @@ def mark_model_macBook(didbName='didb', write_to_file=True):
     #option 55
     df.loc[df['params'].isin(params_macbook), 'model'] = 'macBook'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-def mark_model_macBookPro(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_macBookPro(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     # macBookPro_rule = ((df['brand'] == 'Apple') & (df['model'] == 'macBook')) & ((df['hostname'].str.contains('pro', na=False, case=False)) | (df['user_agent'].str.contains('pro', na=False, case=False)) | (df['hostname'].str.contains('MBP', na=False, case=True)))
     
@@ -106,11 +107,11 @@ def mark_model_macBookPro(didbName='didb', write_to_file=True):
     #option 55
     df.loc[df['params'].isin(params_macbookPro), 'model'] = 'macBookPro'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_appleWatch(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_appleWatch(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     appleWatch_rule = df['model'].isnull() & (
         # read from hostname, user agent, vendor
@@ -128,11 +129,11 @@ def mark_model_appleWatch(didbName='didb', write_to_file=True):
     df.loc[appleWatch_rule, 'model'] = 'appleWatch'
 
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_galaxy(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_galaxy(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     
     # galaxy_rule =  (df['brand'] == 'Samsung') & ((df['hostname'].str.contains('galaxy', na=False, case=False)) | (df['user_agent'].str.contains('galaxy', na=False, case=False)))
     # galaxy_rule = (df['user_agent'].str.contains('SM-A115F', na=False, case=True)) | galaxy_rule
@@ -148,12 +149,12 @@ def mark_model_galaxy(didbName='didb', write_to_file=True):
 
     df.loc[galaxy_rule, 'model'] = 'Galaxy'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-def mark_model_galaxyTab(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_galaxyTab(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     # galaxy_rule = (df['brand'] == 'Samsung') & ((df['hostname'].str.contains('galaxy', na=False, case=False)) | (df['user_agent'].str.contains('galaxy', na=False, case=False)))
     # galaxyTab_rule = (galaxy_rule) & (df['model'] == 'Galaxy') & ((df['hostname'].str.contains('tab', na=False, case=False)) | (df['user_agent'].str.contains('tab', na=False, case=False)))
@@ -168,11 +169,11 @@ def mark_model_galaxyTab(didbName='didb', write_to_file=True):
 
     df.loc[galaxyTab_rule, 'model'] = 'GalaxyTab'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
     
-def mark_model_hpPrinter(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_hpPrinter(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     # hpPrinter_rule = (df['brand'] == 'HP') & ((df['vendor'].str.contains('print', na=False, case=False)) | (df['vendor'].str.contains('laserj', na=False, case=False)))
     
@@ -190,11 +191,11 @@ def mark_model_hpPrinter(didbName='didb', write_to_file=True):
     #option 55
     df.loc[df['params'].isin(params_printer), 'model'] = 'LaserJet'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_thinkpad(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_thinkpad(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     # galaxyTab_rule = (df['brand'] == 'Lenovo') & ((df['vendor'].str.contains('thinkpad', na=False, case=False)) | (df['hostname'].str.contains('thinkpad', na=False, case=False)))
     
@@ -207,20 +208,20 @@ def mark_model_thinkpad(didbName='didb', write_to_file=True):
 
     df.loc[thinkpad_rule, 'model'] = 'ThinkPad'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_nintendo(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_nintendo(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     
     nintendo_rule = df['user_agent'].str.contains('NX NIFM', na=False, case=False)
     df.loc[nintendo_rule, 'model'] = 'Nintendo 3DS'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_elitebook(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_elitebook(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     elitebook_rule = (
         # read from user agent, vendor or hostname
@@ -231,12 +232,12 @@ def mark_model_elitebook(didbName='didb', write_to_file=True):
     
     df.loc[elitebook_rule, 'model'] = 'EliteBook'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-def mark_model_huaweiP(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_huaweiP(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     huaweiP_rule = (
         # read from user agent, vendor or hostname
@@ -247,12 +248,12 @@ def mark_model_huaweiP(didbName='didb', write_to_file=True):
     
     df.loc[huaweiP_rule, 'model'] = 'Huawei-P'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-def mark_model_xiaomiMi(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_xiaomiMi(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     xiaomiMi_rule = (
         # read from user agent, vendor or hostname
         (df['vendor'].str.contains('xiaomi.mi', regex = True, na=False, case=False)) | 
@@ -265,11 +266,11 @@ def mark_model_xiaomiMi(didbName='didb', write_to_file=True):
     )
     df.loc[xiaomiMi_rule, 'model'] = 'Xiaomi-Mi'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_xiaomiRedmiNote(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_xiaomiRedmiNote(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     # Redmi Note 8 Pro
     xiaomiRedmi_rule = (
         # read from user agent, vendor or hostname
@@ -278,11 +279,11 @@ def mark_model_xiaomiRedmiNote(didbName='didb', write_to_file=True):
     )
     df.loc[xiaomiRedmi_rule, 'model'] = 'Redmi Note'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_mediapad(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_mediapad(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     mediaPad_rule = (
         # read from user agent, vendor or hostname
@@ -293,12 +294,12 @@ def mark_model_mediapad(didbName='didb', write_to_file=True):
     
     df.loc[mediaPad_rule, 'model'] = 'MediaPad'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-def mark_model_playStation(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_model_playStation(write_to_file=True):
+    df = helper.get_df(config._didbName_)
 
     playStation_rule = (
         # read from user agent, vendor or hostname
@@ -312,11 +313,11 @@ def mark_model_playStation(didbName='didb', write_to_file=True):
     #option 55
     df.loc[df['params'].isin(params_ps5), 'model'] = 'PlayStation'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-""" def mark_model_air4960(didbName='didb', write_to_file=True):
+""" def mark_model_air4960(write_to_file=True):
     df = helper.get_df(didbName)
 
     air4960_rule = (
@@ -332,7 +333,7 @@ def mark_model_playStation(didbName='didb', write_to_file=True):
     return df
 
 
-def mark_model_air4443(didbName='didb', write_to_file=True):
+def mark_model_air4443(write_to_file=True):
     df = helper.get_df(didbName)
 
     air4443_rule = (
@@ -347,19 +348,19 @@ def mark_model_air4443(didbName='didb', write_to_file=True):
         helper.update_didb(df, didbName)
     return df """
 
-def mark_model_air0000(didbName='didb', write_to_file=True): #air followed by 4 digits, can be genral for all Airties routers & extenders
-    df = helper.get_df(didbName)
+def mark_model_air0000(write_to_file=True): #air followed by 4 digits, can be genral for all Airties routers & extenders
+    df = helper.get_df(config._didbName_)
     pattern = r"(Air\d{3,4})"
     matches = df["hostname"].str.extract(pattern, expand=False)
     df.loc[matches.notnull(), "model"] = matches
     
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-def mark_model_oneday(didbName='didb', write_to_file=True): #xiaomi
-    df = helper.get_df(didbName)
+def mark_model_oneday(write_to_file=True): #xiaomi
+    df = helper.get_df(config._didbName_)
 
     ondeday_rule = (
         (df['user_agent'].str.contains('oneday', na=False, case=False))
@@ -367,11 +368,11 @@ def mark_model_oneday(didbName='didb', write_to_file=True): #xiaomi
     
     df.loc[ondeday_rule, 'model'] = 'Oneday'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_xbox(didbName='didb', write_to_file=True): #xbox
-    df = helper.get_df(didbName)
+def mark_model_xbox(write_to_file=True): #xbox
+    df = helper.get_df(config._didbName_)
 
     xbox_rule = (
         (df['user_agent'].str.contains('xbox', regex=False, na=False, case=False) |
@@ -380,7 +381,7 @@ def mark_model_xbox(didbName='didb', write_to_file=True): #xbox
     
     df.loc[xbox_rule, 'model'] = 'Xbox'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
@@ -392,8 +393,8 @@ def get_model_from_vendor(vendor):
             return match.group(1)
     return None
 
-def mark_model_hp_switch(didbName='didb', write_to_file=True): #switch
-    df = helper.get_df(didbName)
+def mark_model_hp_switch(write_to_file=True): #switch
+    df = helper.get_df(config._didbName_)
     pattern = r'HP\s(.+?)\sSwitch'
     hp_switch_rule = (
         (df['vendor'].str.contains('HP', regex=False, na=False, case=False) &
@@ -402,11 +403,11 @@ def mark_model_hp_switch(didbName='didb', write_to_file=True): #switch
     df.loc[hp_switch_rule, 'model'] = df['vendor'].apply(get_model_from_vendor)
 
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_model_quest(didbName='didb', write_to_file=True): #quest
-    df = helper.get_df(didbName)
+def mark_model_quest(write_to_file=True): #quest
+    df = helper.get_df(config._didbName_)
 
     quest_rule = (
         (df['user_agent'].str.contains(' quest ', regex=False, na=False, case=False))
@@ -414,7 +415,7 @@ def mark_model_quest(didbName='didb', write_to_file=True): #quest
     
     df.loc[quest_rule, 'model'] = 'Quest'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 

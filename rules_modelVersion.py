@@ -5,10 +5,11 @@ import pickle
 import os
 import helper
 import re
+import config
     
 
-def mark_modelVersion_galaxy(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_modelVersion_galaxy(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['model'] == 'Galaxy')].iterrows():
@@ -35,12 +36,12 @@ def mark_modelVersion_galaxy(didbName='didb', write_to_file=True):
     df.loc[galaxy_rule_S9plus, 'modelVersion'] = 'S9+'
 
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_modelVersion_appleUserAgent(didbName='didb', write_to_file=True):
+def mark_modelVersion_appleUserAgent(write_to_file=True):
     print("apple model version start")
-    df = helper.get_df(didbName)
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['user_agent'].str.contains('invitation-registration', na=False, case=False))].iterrows():
@@ -57,11 +58,11 @@ def mark_modelVersion_appleUserAgent(didbName='didb', write_to_file=True):
         df.loc[vx, 'modelVersion'] = version_list[ix]
 
     if write_to_file:
-        helper.update_didb(df, didbName)   
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_modelVersion_galaxyTab(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_modelVersion_galaxyTab(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['model'] == 'GalaxyTab')].iterrows():
@@ -87,12 +88,12 @@ def mark_modelVersion_galaxyTab(didbName='didb', write_to_file=True):
     df.loc[galaxyTab_rule_S6, 'modelVersion'] = 'S6 Lite'
 
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-def mark_modelVersion_mediaPad(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_modelVersion_mediaPad(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['model'] == 'MediaPad')].iterrows():
@@ -115,12 +116,12 @@ def mark_modelVersion_mediaPad(didbName='didb', write_to_file=True):
         df.loc[vx, 'modelVersion'] = version_list[ix]
     
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
-def mark_modelVersion_ThinkPad(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_modelVersion_ThinkPad(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['model'] == 'ThinkPad')].iterrows():
@@ -143,11 +144,11 @@ def mark_modelVersion_ThinkPad(didbName='didb', write_to_file=True):
         df.loc[vx, 'modelVersion'] = version_list[ix]
     
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_modelVersion_xiaomiMi(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_modelVersion_xiaomiMi(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['model'] == 'Xiaomi-Mi')].iterrows():
@@ -172,11 +173,11 @@ def mark_modelVersion_xiaomiMi(didbName='didb', write_to_file=True):
     df.loc[MI8_rule, 'modelVersion'] = '8'
 
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_modelVersion_xiaomiRedmiNote(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_modelVersion_xiaomiRedmiNote(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     #from user agent
     idx_list = []
     version_list = []
@@ -214,13 +215,13 @@ def mark_modelVersion_xiaomiRedmiNote(didbName='didb', write_to_file=True):
         # print(myversion)
         df.loc[vx, 'modelVersion'] = version_list[ix]
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
 
 
-def mark_model_xboxOne(didbName='didb', write_to_file=True): #xbox one
-    df = helper.get_df(didbName)
+def mark_model_xboxOne(write_to_file=True): #xbox one
+    df = helper.get_df(config._didbName_)
 
     xbox_rule = (
         (df['user_agent'].str.contains('xboxone', regex=False, na=False, case=False) |
@@ -229,11 +230,11 @@ def mark_model_xboxOne(didbName='didb', write_to_file=True): #xbox one
     
     df.loc[xbox_rule, 'modelVersion'] = 'Xbox One'
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_modelVersion_huaweiP(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_modelVersion_huaweiP(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['model'] == 'Huawei-P')].iterrows():
@@ -258,11 +259,11 @@ def mark_modelVersion_huaweiP(didbName='didb', write_to_file=True):
         df.loc[vx, 'modelVersion'] = version_list[ix]
     
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_modelVersion_eliteBook(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_modelVersion_eliteBook(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[(df['model'] == 'EliteBook')].iterrows():
@@ -284,11 +285,11 @@ def mark_modelVersion_eliteBook(didbName='didb', write_to_file=True):
         # print(myversion)
         df.loc[vx, 'modelVersion'] = version_list[ix]
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df
 
-def mark_xiaomi_version_oneday(didbName='didb', write_to_file=True):
-    df = helper.get_df(didbName)
+def mark_xiaomi_version_oneday(write_to_file=True):
+    df = helper.get_df(config._didbName_)
     idx_list = []
     version_list = []
     for i,v in df[df['os'] == 'Android'].iterrows():
@@ -309,5 +310,5 @@ def mark_xiaomi_version_oneday(didbName='didb', write_to_file=True):
     for ix, vx in enumerate(idx_list):
         df.loc[vx, 'modelVersion'] = version_list[ix].split(";")[0]
     if write_to_file:
-        helper.update_didb(df, didbName)
+        helper.update_didb(df, config._didbName_)
     return df

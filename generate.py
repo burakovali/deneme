@@ -3,7 +3,6 @@ import json
 import pandas as pd
 import pickle
 import os
-import rules
 import helper, config
 import assoc_parser, raw_user_agent_parse
 from user_agents import parse
@@ -13,8 +12,9 @@ if not os.path.exists(config.didbFilePath):
     os.makedirs(config.didbFilePath)
 
 def populate_didb(didbName, rule='ALL', write_to_csv=True):
-    didbFile = os.path.join(config.didbFilePath, didbName)
-    helper.delete_didb(didbFile) # Clear the previously stored processed_didb
+    import rules
+    print("Populating " + str(didbName) + ' ...')
+    helper.delete_didb(didbName) # Clear the previously stored processed_didb
     print("Running rules...")
     if rule == 'ALL':
         for rule in rules.all_rules:
@@ -43,38 +43,40 @@ def populate_didb(didbName, rule='ALL', write_to_csv=True):
         print('RULE UNDEFINED!')
         exit()
             
-    df = helper.get_df(didbFile)
-    df_merged = merge_didb(didbFile, True)
+    df = helper.get_df(didbName)
+    df_merged = merge_didb(didbName, True)
     if write_to_csv:
-        processed_csv = os.path.join(config.didbFilePath, 'processed_didb.csv')
-        merged_csv = os.path.join(config.didbFilePath, 'merged_didb.csv')
+        didb_name_trailer = didbName.split('didb_')[1]
+        processed_csv = os.path.join(config.didbFilePath, 'processed_didb_' + str(didb_name_trailer) + '.csv')
+        merged_csv = os.path.join(config.didbFilePath, 'merged_didb_' + str(didb_name_trailer) + '.csv')
         helper.write_df_to_csv(df, processed_csv)
         helper.write_df_to_csv(df_merged, merged_csv)
     return df, df_merged
 
-def create_didb(didbName='didb', write_to_file=True):
+def create_didb(didbName='didb', files_to_use = {'user_agent': 'user_agent.json', 'dhcp_proc': 'dhcp_proc.json', 'assoc_req': 'assoc_req.json', 'raw_user_agent': 'raw_user_agent.json'}, write_to_file=True):
 
-    user_agent_path = os.path.join(config.logFilePath, 'user_agent.json')
+    user_agent_path = os.path.join(config.logFilePath, files_to_use['user_agent'])
     f_ua = open(user_agent_path)
-    print("Loading user_agent.json...")
+    print("Loading " + str(files_to_use['user_agent']) + ' ...')
     data_ua = json.load(f_ua)
 
-    dhcp_proc_path = os.path.join(config.logFilePath, 'dhcp_proc.json')
+    dhcp_proc_path = os.path.join(config.logFilePath, files_to_use['dhcp_proc'])
     f_dhcp_proc = open(dhcp_proc_path)
-    print("Loading dhcp_proc.json...")
+    print("Loading " + str(files_to_use['dhcp_proc']) + ' ...')
     data_dhcp_proc = json.load(f_dhcp_proc)
 
-    assoc_req_path = os.path.join(config.logFilePath, 'assoc_req.json')
+    assoc_req_path = os.path.join(config.logFilePath, files_to_use['assoc_req'])
     f_assoc_req = open(assoc_req_path)
-    print("Loading assoc_req.json...")
+    print("Loading " + str(files_to_use['assoc_req']) + ' ...')
     data_assoc_req =  assoc_parser.parse_assoc_df(json.load(f_assoc_req))
 
-    raw_user_agent_path = os.path.join(config.logFilePath, 'raw_user_agent.json')
+    raw_user_agent_path = os.path.join(config.logFilePath, files_to_use['raw_user_agent'])
     f_rua = open(raw_user_agent_path)
-    print("Loading raw_user_agent.json...")
+    print("Loading " + str(files_to_use['raw_user_agent']) + ' ...')
     data_rua = raw_user_agent_parse.parse_user_agent(json.load(f_rua))
 
-    print("Creating didb...")
+    didb_name_trailer = files_to_use['user_agent'].split('user_agent')[1].split('.')[0]
+    print("Creating didb... " + str(didb_name_trailer))
 
     df_devices = pd.DataFrame(columns=['mac', 'gw_mac', 'user_agent', 'timestamp', 'hostname', 'params', 'vendor','assoc_req_spatial_stream','assoc_req_vendors','wfa_device_name',"ua_device_family","ua_device_brand","ua_device_os", 'isWiFi'])
     macs = []
@@ -91,7 +93,7 @@ def create_didb(didbName='didb', write_to_file=True):
         row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None,'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty: 
-            df_devices = df_devices.append(row, ignore_index=True)
+            df_devices = pd.concat([df_devices, pd.DataFrame(row, index=[0])], ignore_index=True)
             macs.append(item['mac'])
             user_agents.append(item['user_agent'])
             gw_macs.append(item['gw_mac'])
@@ -108,7 +110,7 @@ def create_didb(didbName='didb', write_to_file=True):
         row = {'mac': item['mac'], 'user_agent': item['user_agent'], 'hostname': None, 'gw_mac': item['gw_mac'], 'timestamp': item['timestamp'], 'assoc_req_spatial_stream': None, 'assoc_req_vendors':None, 'wfa_device_name':None, 'ua_device_family':user_agent_temp.device.family, 'ua_device_brand':user_agent_temp.device.brand, 'ua_device_os':str(user_agent_temp.os.family), 'isWiFi': False}
         isThisDevice = (df_devices['mac'] == item['mac']) & (df_devices['gw_mac'] == item['gw_mac']) & (df_devices["user_agent"] == item['user_agent'])
         if df_devices[isThisDevice].empty:
-            df_devices = df_devices.append(row, ignore_index=True)
+            df_devices = pd.concat([df_devices, pd.DataFrame(row, index=[0])], ignore_index=True)
             macs.append(item['mac'])
             user_agents.append(item['user_agent'])
             gw_macs.append(item['gw_mac'])
@@ -147,7 +149,7 @@ def create_didb(didbName='didb', write_to_file=True):
         #                     df_devices.loc[idx, 'timestamp'] = df_devices.loc[idx, 'timestamp'] + ',' + item['timestamp']
         #                     df_devices.loc[idx, 'isWiFi'] = False
         if df_devices[isThisDevice].empty:
-            df_devices = df_devices.append(row, ignore_index=True)
+            df_devices = pd.concat([df_devices, pd.DataFrame(row, index=[0])], ignore_index=True)
         else:
             df_devices.loc[isThisDevice, 'timestamp'] = item['timestamp']
         hostnames.append(thisHostname)
@@ -168,13 +170,17 @@ def create_didb(didbName='didb', write_to_file=True):
             df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'isWiFi'] = True
         else:
             if not (device_mac == None):
-                    df_devices = df_devices.append(row, ignore_index=True)
+                    df_devices = pd.concat([df_devices, pd.DataFrame(row, index=[0])], ignore_index=True)
 
+    didbFileName = None
     if write_to_file:
-        didbFile = os.path.join(config.didbFilePath, didbName)
+        if didb_name_trailer != '':
+            didbFileName = didbName + didb_name_trailer
+        didbFile = os.path.join(config.didbFilePath, didbFileName)
+        config.set_didbName(didbFileName)
         helper.write_pickle(df_devices, didbFile)
 
-    return df_devices
+    return df_devices, didbFileName
 
 
 def create_didb_redundant(write_to_file=False):
@@ -237,9 +243,12 @@ def create_didb_redundant(write_to_file=False):
     return df_devices
 
 
-def merge_didb(didbName='didb', write_to_file=True):
+def merge_didb(didbName='didb', create_combined_didb=False, write_to_file=True):
 
-    df = helper.get_df(didbName)
+    if create_combined_didb:
+        df = helper.get_merged_df(didbName)
+    else:
+        df = helper.get_df(didbName)
 
     macList = list(df['mac'].unique())
 
@@ -369,9 +378,40 @@ def merge_didb(didbName='didb', write_to_file=True):
         merged_df = merged_df.append(row, ignore_index=True)
 
         if write_to_file:
-            didbFile = os.path.join(config.didbFilePath, 'didb_merged')
-            helper.write_pickle(merged_df, didbFile)
+            if create_combined_didb:
+                didbFile = os.path.join(config.didbFilePath, 'combined_didb')
+                helper.write_pickle(merged_df, didbFile)
+            else:
+                didb_name_trailer = didbName.split('didb_')[1]
+                didbFile = os.path.join(config.didbFilePath, 'merged_didb_' + str(didb_name_trailer))
+                helper.write_pickle(merged_df, didbFile)
     return merged_df
+
+def combine_didb(didbList, write_to_file=True):
+
+    for di,dv in enumerate(didbList):
+        print(str(dv))
+        if di == 0:
+            combined_df = helper.get_merged_df(dv)
+        else:
+            combined_df = pd.concat([combined_df, helper.get_merged_df(dv)], ignore_index=True)
+
+    didbFile = os.path.join(config.didbFilePath, 'combined_didb')
+    helper.write_pickle(combined_df, didbFile)
+    merged_combined_df = merge_didb('combined_didb', True, True)
+
+    if write_to_file:
+        combined_csv = os.path.join(config.didbFilePath, 'combined_didb.csv')
+        helper.write_df_to_csv(merged_combined_df, combined_csv)
+
+    return combined_df
+
+
+def create_and_populate_didb(didbName='didb', files_to_use = {'user_agent': 'user_agent.json', 'dhcp_proc': 'dhcp_proc.json', 'assoc_req': 'assoc_req.json', 'raw_user_agent': 'raw_user_agent.json'}, write_to_file=True):
+
+    df, thisdidb = create_didb(didbName, files_to_use, True)
+    populate_didb(thisdidb, 'ALL', True)
+
 
 def remove_nan (myList):
     if myList is not None:

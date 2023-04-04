@@ -85,7 +85,7 @@ def read_pickle(fileName):
 
 def get_df(didbName):
     didbFile = os.path.join(config.didbFilePath, didbName)
-    didb_processed = str(didbFile) + '_processed'
+    didb_processed = os.path.join(config.didbFilePath, 'processed_' + didbName)
     if os.path.exists(didb_processed):
         df = read_pickle(didb_processed)
     else:
@@ -94,22 +94,29 @@ def get_df(didbName):
 
 def get_merged_df(didbName):
     didbFile = os.path.join(config.didbFilePath, didbName)
-    didb_processed = str(didbFile) + '_merged'
-    if os.path.exists(didb_processed):
-        df = read_pickle(didb_processed)
+    didb_merged = os.path.join(config.didbFilePath, 'merged_' + didbName)
+    if os.path.exists(didb_merged):
+        df = read_pickle(didb_merged)
     else:
         df = read_pickle(didbFile)
     return df
 
+def get_combined_df():
+    combined_didb = os.path.join(config.didbFilePath, 'combined_didb')
+    if os.path.exists(combined_didb):
+        df = read_pickle(combined_didb)
+    else:
+        print("Combined didb does not exist!")
+        exit()
+    return df
+
 def update_didb(df, didbName):
-    didbFile = os.path.join(config.didbFilePath, didbName)
-    didb_processed = str(didbFile) + '_processed'
+    didb_processed = os.path.join(config.didbFilePath, 'processed_' + didbName)
     write_pickle(df, didb_processed)
     return df
 
 def delete_didb(didbName):
-    didbFile = os.path.join(config.didbFilePath, didbName)
-    didb_processed = str(didbFile) + '_processed'
+    didb_processed = os.path.join(config.didbFilePath, 'processed_' + didbName)
     if os.path.exists(didb_processed):
         print("Deleting previous processed didb...")
         os.remove(didb_processed)
@@ -148,7 +155,7 @@ def check_oui(brandName, didbName='didb'):
     else:
         df_oui = fetcher.get_ouiList()
 
-    didbFile = os.path.join(config.didbFilePath, didbName)
+    didbFile = os.path.join(config.didbFilePath, config._didbName_)
     df = read_pickle(didbFile)
     df['mac_oui'] = df['mac'].apply(lambda x: x[:6] if is_global(x[:6]) else None)
     mask = df['mac_oui'].notnull()

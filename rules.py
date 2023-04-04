@@ -19,7 +19,7 @@ model_rules =[rules_model.mark_model_iphone, rules_model.mark_model_ipad, rules_
                 rules_model.mark_model_galaxy, rules_model.mark_model_galaxyTab, rules_model.mark_model_hpPrinter, rules_model.mark_model_thinkpad,\
                 rules_model.mark_model_elitebook, rules_model.mark_model_huaweiP, rules_model.mark_model_xiaomiMi,\
                 rules_model.mark_model_mediapad, rules_model.mark_model_playStation, #rules_model.mark_model_air4960rules_model.mark_model_air4443, \
-                rules_model.mark_model_nintendo, rules_model.mark_model_oneday,rules_model.mark_model_quest, \
+                rules_model.mark_model_nintendo, rules_model.mark_model_oneday, rules_model.mark_model_quest, \
                 rules_model.mark_model_xiaomiRedmiNote, rules_model.mark_model_xbox, rules_model.mark_model_air0000, rules_model.mark_model_hp_switch]
 
 modelVersion_rules = [rules_modelVersion.mark_modelVersion_galaxy, rules_modelVersion.mark_modelVersion_galaxyTab,
