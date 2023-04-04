@@ -44,7 +44,7 @@ def populate_didb(didbName, rule='ALL', write_to_csv=True):
         exit()
             
     df = helper.get_df(didbName)
-    df_merged = merge_didb(didbName, True)
+    df_merged = merge_didb(didbName, False, True)
     if write_to_csv:
         didb_name_trailer = didbName.split('didb_')[1]
         processed_csv = os.path.join(config.didbFilePath, 'processed_didb_' + str(didb_name_trailer) + '.csv')
@@ -170,7 +170,7 @@ def create_didb(didbName='didb', files_to_use = {'user_agent': 'user_agent.json'
             df_devices.loc[(df_devices['mac'] == device_mac) & (df_devices['gw_mac'] == item['gw_mac']), 'isWiFi'] = True
         else:
             if not (device_mac == None):
-                    df_devices = pd.concat([df_devices, pd.DataFrame(row, index=[0])], ignore_index=True)
+                df_devices = pd.concat([df_devices, pd.DataFrame(row, index=[0])], ignore_index=True)
 
     didbFileName = None
     if write_to_file:
@@ -266,7 +266,7 @@ def merge_didb(didbName='didb', create_combined_didb=False, write_to_file=True):
         gw_mac = ', '.join(gw_mac)
         if len(gw_mac) == 0:
             gw_mac = ''
-       
+
         try:
             brand = list(df[df['mac'] == mac]['brand'].unique())
         except:
@@ -375,7 +375,7 @@ def merge_didb(didbName='didb', create_combined_didb=False, write_to_file=True):
 
         row = {'mac': sta_mac, 'gw_mac': gw_mac, 'brand': brand, 'model': model, 'modelVersion': modelVersion, 'os': oss, 'osVersion': osVersion, 'deviceType': deviceType, 'timestamp': latest_timestamp, 'params': params, 'isWiFi': iswifi, 'isRandom': isRandom, 'hostname': hostName}
 
-        merged_df = merged_df.append(row, ignore_index=True)
+        merged_df = pd.concat([merged_df, pd.DataFrame(row, index=[0])], ignore_index=True)
 
         if write_to_file:
             if create_combined_didb:

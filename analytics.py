@@ -7,8 +7,8 @@ import generate
 import rules
 import math
 
-def analyze_didb(didbName='didb', write_to_file=True):
-    df = helper.get_merged_df(didbName)
+def analyze_didb(write_to_file=True):
+    df = helper.get_combined_df()
 
     # invalidMacIdx = []
     # for i,r in df.iterrows():

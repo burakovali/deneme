@@ -1,4 +1,4 @@
-import fetcher, generate, query
+import fetcher, generate, query, analytics
 
 def main():
     # Define a device identification database name.
@@ -22,7 +22,9 @@ def main():
     # Note that create_and_populate_didb works on logs that span a single time duration. For example, below a didb file is generated using user_agent, dhcp and assoc_req logs that are collected between 2023-03-01 00:00:00 and 2023-03-02 00:00:00
     # To create and populate a didb using multiple logs from different time frames, you should use combine_didb.
     if False:
-        files_to_use = {'user_agent': 'user_agent_2023-03-01-00-00-00_2023-03-02-00-00-00.json', 'dhcp_proc': 'dhcp_proc_2023-03-01-00-00-00_2023-03-02-00-00-00.json', 'assoc_req': 'assoc_req_2023-03-01-00-00-00_2023-03-02-00-00-00.json', 'raw_user_agent': 'raw_user_agent_2023-03-01-00-00-00_2023-03-02-00-00-00.json'}
+        # files_to_use = {'user_agent': 'user_agent_2023-03-01-00-00-00_2023-03-02-00-00-00.json', 'dhcp_proc': 'dhcp_proc_2023-03-01-00-00-00_2023-03-02-00-00-00.json', 'assoc_req': 'assoc_req_2023-03-01-00-00-00_2023-03-02-00-00-00.json', 'raw_user_agent': 'raw_user_agent_2023-03-01-00-00-00_2023-03-02-00-00-00.json'}
+        # files_to_use = {'user_agent': 'user_agent_2023-03-02-00-00-00_2023-03-03-00-00-00.json', 'dhcp_proc': 'dhcp_proc_2023-03-02-00-00-00_2023-03-03-00-00-00.json', 'assoc_req': 'assoc_req_2023-03-02-00-00-00_2023-03-03-00-00-00.json', 'raw_user_agent': 'raw_user_agent_2023-03-02-00-00-00_2023-03-03-00-00-00.json'}
+        files_to_use = {'user_agent': 'user_agent_2023-03-03-00-00-00_2023-03-04-00-00-00.json', 'dhcp_proc': 'dhcp_proc_2023-03-03-00-00-00_2023-03-04-00-00-00.json', 'assoc_req': 'assoc_req_2023-03-03-00-00-00_2023-03-04-00-00-00.json', 'raw_user_agent': 'raw_user_agent_2023-03-03-00-00-00_2023-03-04-00-00-00.json'}
         generate.create_and_populate_didb(didbName, files_to_use, True)
 
 
@@ -36,6 +38,7 @@ def main():
 
     # Combined didb can be queried as given in following examples. For full list of available queries refer to query.py
     if False:
+        analytics.analyze_didb()
         query.query_by_mac('78:4f:43:a0:98:72')
         query.query_by_brand('apple')
         query.query_by_model('iphone')
