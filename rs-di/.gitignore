@@ -1,0 +1,49 @@
+.*
+*.o
+*.o.*
+*.a
+*.so
+*.so.dbg
+*.d
+*.cmd
+*.json
+*.csv
+# Ignore pickles
+*.pkl
+**/*.pkl
+didb*
+#
+# Top-level generic files
+#
+/tags
+/TAGS
+#
+# git files that we don't want to ignore even if they are dot-files
+#
+!.gitignore
+!.mailmap
+!.cocciconfig
+# cscope files
+cscope.*
+ncscope.*
+# gnu global files
+GPATH
+GRTAGS
+GSYMS
+GTAGS
+# id-utils files
+ID
+*.orig
+*~
+\#*#
+#
+data
+Caches
+__pycache__
+test
+data*
+RSA_keys
+tables
+texts
+plots
+pickles
